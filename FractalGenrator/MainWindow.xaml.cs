@@ -38,30 +38,31 @@ namespace FractalGenrator
         private void StartAnimation(object sender, EventArgs e)
         {
             frames += 1;
-            if (frames % 60 == 0)
+            if (frames % 10 == 0)
             {
-                DrawBinaryTree(canvas1, depth, new Point(canvas1.Width / 2, canvas1.Height * 0.95), 0.2 * canvas1.Width, 3 * Math.PI / 2);
+                DrawBinaryTree(canvas1, depth, new Point(canvas1.Width * 0.25, canvas1.Height * 0.77), 0.2 * canvas1.Width, 3 * Math.PI / 2, 3);
                 string str = "Binary Tree. Depth = " + depth.ToString();
                 tbLabel.Text = str;
                 depth += 1;
-                if (depth > 15)
+                if (depth > 10)
                 {
-                    tbLabel.Text = "Binary Tree. Depth = 15. Finished";
+                    tbLabel.Text = "Binary SOSNA. Depth = 10. Finished";
                     CompositionTarget.Rendering -= StartAnimation;
                 }
             }
         }
         private double lengthScale = 0.75;
-        private double radiusFract = Math.PI / 3;
-        private void DrawBinaryTree(Canvas canvas, int depth, Point pt, double length, double rad)
+        private double angleFract = Math.PI / 5;
+        private void DrawBinaryTree(Canvas canvas, int depth, Point pt, double length, double angl, double thickness = 1.0)
         {
-            double x1 = pt.X + length * Math.Cos(rad);
-            double y1 = pt.Y + length * Math.Sin(rad);
+            double x1 = pt.X + length * Math.Cos(angl);
+            double y1 = pt.Y + length * Math.Sin(angl);
 
             Line line = new Line();
 
             line.Stroke = Brushes.Black;
-            line.StrokeThickness = 0.2;
+            line.StrokeThickness = thickness * 0.88;
+            thickness *= 0.88;
             line.X1 = pt.X;
             line.Y1 = pt.Y;
             line.X2 = x1;
@@ -70,10 +71,15 @@ namespace FractalGenrator
 
             if (depth > 1)
             {
-                DrawBinaryTree(canvas, depth - 1, new Point(x1, y1), length * lengthScale, rad + radiusFract);
-                DrawBinaryTree(canvas, depth - 1, new Point(x1, y1), length * lengthScale, rad - radiusFract * 0.5);
+                DrawBinaryTree(canvas, depth - 1, new Point(x1, y1), length * lengthScale, angl + angleFract + 0.5, thickness);
+                DrawBinaryTree(canvas, depth - 1, new Point(x1, y1), length * lengthScale, angl - angleFract + 0.7, thickness);
             }
             else return;
+        }
+
+        private void Viewbox_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
+        {
+
         }
     }
 }
