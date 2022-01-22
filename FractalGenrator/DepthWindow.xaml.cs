@@ -20,9 +20,12 @@ namespace FractalGenrator
     /// </summary>
     public partial class DepthWindow : Window
     {
-        public DepthWindow()
+
+        public DepthWindow(int depth)
         {
             InitializeComponent();
+            depthFractalBox.Text = depth.ToString();
+            //depthFractalBox.Text
         }
         private void Accept_Click(object sender, RoutedEventArgs e)
         {

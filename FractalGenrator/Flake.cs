@@ -29,16 +29,13 @@ namespace FractalGenrator
             Name = name;
             pl = Pline;
         }
-        private void SnowFlakeEdge(Canvas canvas,
-        int depth, double theta, double distance)
+        private void SnowFlakeEdge(Canvas canvas, int depth, double theta, double distance)
         {
             Point pt = new Point();
-            if ((depth <= 0) || (distance < 1.0))
+            if ((depth <= 0) || (distance <= 1.0))
             {
-                pt.X = SnowflakePoint.X +
-                distance * Math.Cos(theta);
-                pt.Y = SnowflakePoint.Y +
-                distance * Math.Sin(theta);
+                pt.X = SnowflakePoint.X + distance * Math.Cos(theta);
+                pt.Y = SnowflakePoint.Y + distance * Math.Sin(theta);
                 pl.Points.Add(pt);
                 SnowflakePoint = pt;
                 return;
@@ -47,8 +44,7 @@ namespace FractalGenrator
             for (int j = 0; j < 4; j++)
             {
                 theta += dAngles[j];
-                SnowFlakeEdge(canvas, depth - 1,
-                theta, distance);
+                SnowFlakeEdge(canvas, depth - 1, theta, distance);
             }
         }
 

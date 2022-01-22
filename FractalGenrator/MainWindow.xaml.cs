@@ -84,7 +84,8 @@ namespace FractalGenrator
         
         private void Depth_Click(object sender, RoutedEventArgs e)
         {
-            DepthWindow depthWindow = new();
+            DepthWindow depthWindow = new(depth);
+
             if (flagFlake || flagTree)
             {
                 MessageBox.Show("Wait the end of rendering!");
