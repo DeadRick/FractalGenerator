@@ -33,6 +33,5 @@ namespace FractalGenrator
         {
             get { return depthFractalBox.Text; }
         }
-        
     }
 }

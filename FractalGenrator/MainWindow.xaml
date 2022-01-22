@@ -14,14 +14,14 @@
                 <MenuItem Header="Angle"/>
             </Menu>
             <StackPanel DockPanel.Dock="Left" Background="White" Orientation="Vertical" Width="150">
-                <Button Background="White" Content="Binary Tree" Click="btnStart_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
-                <Button Background="White" Content="Фрактал 2" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
+                <Button Background="White" Content="Binary Tree" Click="btnTree_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
+                <Button Background="White" Content="Flake" Click="btnFlake_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
                 <Button Background="White" Content="Фрактал 3" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
                 <Button Background="White" Content="Фрактал 4" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
                 <Button Background="White" Content="Фрактал 5" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
             </StackPanel>
             
-            <Viewbox Stretch="Uniform" >
+            <Viewbox x:Name="ViewBox1" Stretch="Uniform">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="5,5,5,0">
                         <TextBlock Name="tbLabel" Margin="20,5,0,0"/>
