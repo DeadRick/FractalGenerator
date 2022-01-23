@@ -27,6 +27,8 @@ namespace FractalGenrator
         bool flagTree = false;
         bool flagFlake = false;
         bool saveCheck = false;
+        public bool angleCheck = false;
+        private static double angle = Math.PI / 5;
 
         public MainWindow()
         {
@@ -43,23 +45,17 @@ namespace FractalGenrator
             pl.Stroke = Brushes.Black;
         }
 
-        
         private double SnowflakeSize;
         private int depth = 10;
         private int cntDepth = 0;
         private int frames = 0;
         double[] dTheta = new double[4] { 0, Math.PI / 3, -2 * Math.PI / 3, Math.PI / 3 };
 
-        
-        
         Flake flake = new("Flake", ref pl);
-        BinaryTree tree = new("Binary Tree");
-        
-
+        BinaryTree tree = new("Binary Tree", angle);
 
         private void btnTree_Click(object sender, RoutedEventArgs e)
         {
-            
             flagTree = saveCheck = true;
             canvas1.Children.Clear();
             tbLabel.Text = "";
@@ -72,8 +68,8 @@ namespace FractalGenrator
             frames += 1;
             if (frames % 10 == 0)
             {
-                tree.DrawBinaryTree(canvas1, cntDepth, new Point(canvas1.Width / 2, canvas1.Height * 0.77), 0.2 * canvas1.Width, 3 * Math.PI / 2, 1.5);
-                string str = $"{tree.Name}. Depth = " + cntDepth.ToString();
+                tree.DrawBinaryTree(canvas1, cntDepth, new Point(canvas1.Width / 2, canvas1.Height * 0.77), 0.2 * canvas1.Width, 3 * Math.PI / 2, angleCheck, 1.5, angle + 25.30);
+                string str = $"{tree.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
                 cntDepth += 1;
                 if (cntDepth > depth)
@@ -85,9 +81,23 @@ namespace FractalGenrator
             }
         }
 
+
         private void Angle_Click(object sender, RoutedEventArgs e)
         {
             AngleWindow angleWindow = new();
+
+            if (angleWindow.ShowDialog() == true)
+            {
+                angle = angleWindow.slider.Value;
+                angleCheck = true;
+                MessageBox.Show("Angle of Binary Tree was changed!");
+                angleWindow.Close();
+            } else
+            {
+                angleCheck = false;
+                MessageBox.Show("Angle of Binary tree is default now.");
+                angleWindow.Close();
+            }
         }
         private void Depth_Click(object sender, RoutedEventArgs e)
         {
@@ -187,7 +197,8 @@ namespace FractalGenrator
                     enc.Save(stm);
                     MessageBox.Show("Picture was saved!");
                 }
-            } catch
+            }
+            catch
             {
                 MessageBox.Show("Error creating image.");
             }

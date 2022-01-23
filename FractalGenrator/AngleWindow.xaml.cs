@@ -22,6 +22,20 @@ namespace FractalGenrator
         public AngleWindow()
         {
             InitializeComponent();
+            Binding bind = new();
+            bind.ElementName = nameof(slider);
+            bind.Path = new PropertyPath(nameof(slider.Value));
+        }
+
+        private void AcceptAngle_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+        }
+
+        private void Default_Click(object sender, RoutedEventArgs e)
+        {
+            
+            this.DialogResult = false;
         }
 
     }
