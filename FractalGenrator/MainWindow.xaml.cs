@@ -12,7 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
 using Fractal;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace FractalGenrator
 {
@@ -24,6 +26,7 @@ namespace FractalGenrator
         static Polyline pl = new();
         bool flagTree = false;
         bool flagFlake = false;
+        bool saveCheck = false;
 
         public MainWindow()
         {
@@ -56,7 +59,8 @@ namespace FractalGenrator
 
         private void btnTree_Click(object sender, RoutedEventArgs e)
         {
-            flagTree = true;
+            
+            flagTree = saveCheck = true;
             canvas1.Children.Clear();
             tbLabel.Text = "";
             cntDepth = 1;
@@ -81,7 +85,10 @@ namespace FractalGenrator
             }
         }
 
-        
+        private void Angle_Click(object sender, RoutedEventArgs e)
+        {
+            AngleWindow angleWindow = new();
+        }
         private void Depth_Click(object sender, RoutedEventArgs e)
         {
             DepthWindow depthWindow = new(depth);
@@ -113,7 +120,7 @@ namespace FractalGenrator
         }
         private void btnFlake_Click(object sender, RoutedEventArgs e)
         {
-            flagFlake = true;
+            flagFlake = saveCheck = true;
             canvas1.Children.Clear();
             tbLabel.Text = "";
             frames = 0;
@@ -128,8 +135,7 @@ namespace FractalGenrator
             {
                 pl.Points.Clear();
                 flake.DrawSnowFlake(canvas1, SnowflakeSize, cntDepth);
-                string str = "Snow Flake - Depth = " +
-                cntDepth.ToString() +  " " + depth.ToString();
+                string str = "Snow Flake - Depth = " + cntDepth.ToString();
                 tbLabel.Text = str;
                 cntDepth += 1;
 
@@ -139,6 +145,51 @@ namespace FractalGenrator
                     CompositionTarget.Rendering -= StartAnimationFlake;
                     flagFlake = false;
                 }
+            }
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            if (saveCheck)
+            {
+                if (flagTree || flagFlake)
+                {
+                    MessageBox.Show("Please, wait the end of rendering.");
+                }
+                else
+                {
+                    CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+                    string path;
+                    dialog.IsFolderPicker = true;
+                    if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+                    {
+                        path = dialog.FileName + @"\fractal.png";
+                        SaveCanvasToFile(canvas1, 250, path);
+                    }
+                }
+            }
+            else MessageBox.Show("There is nothing to save!");
+        }
+        public static void SaveCanvasToFile(Canvas canvas, int dpi, string filename)
+        {
+            var renderTarget = new RenderTargetBitmap(1080, 1080, dpi, dpi, PixelFormats.Pbgra32);
+            renderTarget.Render(canvas);
+            SaveRTBAsPNGBMP(renderTarget, filename);
+        }
+        private static void SaveRTBAsPNGBMP(RenderTargetBitmap bmp, string filename)
+        {
+            try
+            {
+                var enc = new PngBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(bmp));
+                using (var stm = System.IO.File.Create(filename))
+                {
+                    enc.Save(stm);
+                    MessageBox.Show("Picture was saved!");
+                }
+            } catch
+            {
+                MessageBox.Show("Error creating image.");
             }
         }
     }

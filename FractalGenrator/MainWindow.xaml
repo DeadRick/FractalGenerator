@@ -11,7 +11,8 @@
         <DockPanel Background="AntiqueWhite">
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="Depth" Click="Depth_Click"/>
-                <MenuItem Header="Angle"/>
+                <MenuItem Header="Angle" Click="Angle_Click"/>
+                <MenuItem Header="Save to PNG" Click="Save_Click"/>
             </Menu>
             <StackPanel DockPanel.Dock="Left" Background="White" Orientation="Vertical" Width="150">
                 <Button Background="White" Content="Binary Tree" Click="btnTree_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
