@@ -43,7 +43,7 @@ namespace FractalGenrator
             line.Y2 = y2;
             canvas.Children.Add(line);
 
-            if (cntDepth > 1)
+            if (cntDepth > 1 && lineLength > 0.001)
             {
                 DrawLine(canvas, cntDepth - 1, new Point(x1, y1), pixelBetween, lineLength / 3, lengthTo);
                 DrawLine(canvas, cntDepth - 1, new Point(x1 + (lineLength / 3) * 2 , y1), pixelBetween, lineLength / 3, lengthTo);

@@ -140,7 +140,7 @@ namespace FractalGenrator
         {
             DepthWindow depthWindow = new(depth);
 
-            if (flagFlake || flagTree)
+            if (flagFlake || flagTree || flagLine)
             {
                 MessageBox.Show("Wait the end of rendering!");
                 depthWindow.Close();
@@ -252,6 +252,7 @@ namespace FractalGenrator
         }
         private void UnfollowAll()
         {
+            CompositionTarget.Rendering -= StartAnimationLine;
             CompositionTarget.Rendering -= StartAnimationTree;
             CompositionTarget.Rendering -= StartAnimationFlake;
         }

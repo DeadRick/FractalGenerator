@@ -46,7 +46,7 @@ namespace FractalGenrator
             line.Y2 = y1;
             canvas.Children.Add(line);
 
-            if (cntDepth > 1)
+            if (cntDepth > 1 && thickness > 0.05)
             {
                 if (!angleCheck)
                 {
@@ -68,7 +68,11 @@ namespace FractalGenrator
 
                 }
             }
-            else return;
+            else
+            {
+                cntDepth -= 1;
+                return;
+            }
         }
 
     }
