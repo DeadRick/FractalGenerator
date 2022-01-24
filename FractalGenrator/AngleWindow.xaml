@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock>Angle of Binary Tree:</TextBlock>
-        <Slider Orientation="Horizontal"  Grid.Row="1" Minimum="-90" Maximum="90" x:Name="slider"></Slider>
+        <Slider Orientation="Horizontal"  Grid.Row="1" Minimum="-7" Maximum="7" x:Name="slider"></Slider>
         <Viewbox Grid.Row="2">
             <Canvas Width="100" Height="45">
                 <Canvas.RenderTransform>

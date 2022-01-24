@@ -56,6 +56,7 @@ namespace FractalGenrator
 
         private void btnTree_Click(object sender, RoutedEventArgs e)
         {
+            UnfollowAll();
             flagTree = saveCheck = true;
             canvas1.Children.Clear();
             tbLabel.Text = "";
@@ -84,19 +85,26 @@ namespace FractalGenrator
 
         private void Angle_Click(object sender, RoutedEventArgs e)
         {
-            AngleWindow angleWindow = new();
-
-            if (angleWindow.ShowDialog() == true)
+            if ((flagTree || flagFlake) == false)
             {
-                angle = angleWindow.slider.Value;
-                angleCheck = true;
-                MessageBox.Show("Angle of Binary Tree was changed!");
-                angleWindow.Close();
+                AngleWindow angleWindow = new();
+
+                if (angleWindow.ShowDialog() == true)
+                {
+                    angle = angleWindow.slider.Value;
+                    angleCheck = true;
+                    MessageBox.Show("Angle of Binary Tree was changed!");
+                    angleWindow.Close();
+                }
+                else
+                {
+                    angleCheck = false;
+                    MessageBox.Show("Angle of Binary tree is default now.");
+                    angleWindow.Close();
+                }
             } else
             {
-                angleCheck = false;
-                MessageBox.Show("Angle of Binary tree is default now.");
-                angleWindow.Close();
+                MessageBox.Show("Wait the end of rendering.");
             }
         }
         private void Depth_Click(object sender, RoutedEventArgs e)
@@ -130,6 +138,7 @@ namespace FractalGenrator
         }
         private void btnFlake_Click(object sender, RoutedEventArgs e)
         {
+            UnfollowAll();
             flagFlake = saveCheck = true;
             canvas1.Children.Clear();
             tbLabel.Text = "";
@@ -202,6 +211,11 @@ namespace FractalGenrator
             {
                 MessageBox.Show("Error creating image.");
             }
+        }
+        private void UnfollowAll()
+        {
+            CompositionTarget.Rendering -= StartAnimationTree;
+            CompositionTarget.Rendering -= StartAnimationFlake;
         }
     }
 }
