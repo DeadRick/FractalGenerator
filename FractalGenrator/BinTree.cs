@@ -34,7 +34,7 @@ namespace FractalGenrator
             double x1 = pt.X + length * Math.Cos(angl);
             double y1 = pt.Y + length * Math.Sin(angl);
 
-            Line line = new Line();
+            System.Windows.Shapes.Line line = new System.Windows.Shapes.Line();
 
             line.Stroke = Brushes.Black;
             line.StrokeThickness = thickness * 0.88;

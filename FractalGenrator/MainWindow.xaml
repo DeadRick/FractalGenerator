@@ -17,7 +17,7 @@
             <StackPanel DockPanel.Dock="Left" Background="White" Orientation="Vertical" Width="150">
                 <Button Background="White" Content="Binary Tree" Click="btnTree_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
                 <Button Background="White" Content="Flake" Click="btnFlake_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
-                <Button Background="White" Content="Фрактал 3" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
+                <Button Background="White" Content="Line" Click="btnLine_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
                 <Button Background="White" Content="Фрактал 4" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
                 <Button Background="White" Content="Фрактал 5" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
             </StackPanel>
