@@ -45,8 +45,8 @@ namespace FractalGenrator
 
             if (cntDepth > 1)
             {
-                DrawLine(canvas, cntDepth - 1, new Point(x1, y1), pixelBetween, lineLength / 2 - (lineLength / 10), lengthTo);
-                DrawLine(canvas, cntDepth - 1, new Point(x1 + lineLength / 2 + (lineLength / 10) , y1), pixelBetween, lineLength / 2 - (lineLength / 10), lengthTo);
+                DrawLine(canvas, cntDepth - 1, new Point(x1, y1), pixelBetween, lineLength / 3, lengthTo);
+                DrawLine(canvas, cntDepth - 1, new Point(x1 + (lineLength / 3) * 2 , y1), pixelBetween, lineLength / 3, lengthTo);
             }
             else return;
         }
