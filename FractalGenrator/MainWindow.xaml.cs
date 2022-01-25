@@ -31,6 +31,7 @@ namespace FractalGenrator
         bool flagTree = false;
         bool flagFlake = false;
         bool flagLine = false;
+        bool flagCarpet = false;
         bool saveCheck = false;
         public bool angleCheck = false;
         private static double angle = Math.PI / 5;
@@ -43,8 +44,7 @@ namespace FractalGenrator
         public MainWindow()
         {
             InitializeComponent();
-            double ysize = 0.8 * canvas1.Height /
-           (Math.Sqrt(3) * 4 / 3);
+            double ysize = 0.8 * canvas1.Height / (Math.Sqrt(3) * 4 / 3);
             double xsize = 0.8 * canvas1.Width / 2;
             double size = 0;
             if (ysize < xsize)
@@ -56,36 +56,37 @@ namespace FractalGenrator
         }
 
         // Buttons
-        private void btnLine_Click(object sender, RoutedEventArgs e)
+
+        private void ClickSettings(bool flag)
         {
             UnfollowAll();
-            flagLine = saveCheck = true;
+            flag = saveCheck = true;
             canvas1.Children.Clear();
             tbLabel.Text = "";
             frames = 0;
             cntDepth = 1;
+        }
+
+        private void btnCarpet_Click(object sender, RoutedEventArgs e)
+        {
+            ClickSettings(flagCarpet);
+            CompositionTarget.Rendering += StartAnimationCarpet;
+        }
+        private void btnLine_Click(object sender, RoutedEventArgs e)
+        {
+            ClickSettings(flagLine);
             CompositionTarget.Rendering += StartAnimationLine;
         }
         private void btnFlake_Click(object sender, RoutedEventArgs e)
         {
-            UnfollowAll();
-            flagFlake = saveCheck = true;
-            canvas1.Children.Clear();
-            tbLabel.Text = "";
-            frames = 0;
-            cntDepth = 1;
+            ClickSettings(flagFlake);
             canvas1.Children.Add(pl);
             CompositionTarget.Rendering += StartAnimationFlake;
         }
 
         private void btnTree_Click(object sender, RoutedEventArgs e)
         {
-            UnfollowAll();
-            flagTree = saveCheck = true;
-            canvas1.Children.Clear();
-            tbLabel.Text = "";
-            cntDepth = 1;
-            frames = 0;
+            ClickSettings(flagTree);
             CompositionTarget.Rendering += StartAnimationTree;
         }
 
@@ -93,7 +94,7 @@ namespace FractalGenrator
         {
             if (saveCheck)
             {
-                if (flagTree || flagFlake)
+                if (flagTree || flagFlake || flagLine || flagCarpet)
                 {
                     MessageBox.Show("Please, wait the end of rendering.");
                 }
@@ -114,7 +115,7 @@ namespace FractalGenrator
 
         private void Angle_Click(object sender, RoutedEventArgs e)
         {
-            if ((flagTree || flagFlake) == false)
+            if (flagTree == false)
             {
                 AngleWindow angleWindow = new();
 
@@ -140,7 +141,7 @@ namespace FractalGenrator
         {
             DepthWindow depthWindow = new(depth);
 
-            if (flagFlake || flagTree || flagLine)
+            if (flagFlake || flagTree || flagLine || flagCarpet)
             {
                 MessageBox.Show("Wait the end of rendering!");
                 depthWindow.Close();
@@ -162,6 +163,7 @@ namespace FractalGenrator
                 else
                 {
                     MessageBox.Show("Depth was not selected!");
+                  
                 }
             }
         }
@@ -169,13 +171,20 @@ namespace FractalGenrator
 
         // Start Animation section
 
+        private void StartAnimationCarpet(object sender, EventArgs e)
+        {
+            frames += 1;
+            if (frames % 30 == 0)
+            {
+                // carpet.DrawCarpet(canvas1, cntDepth, new Rect);
+            }
+            throw new NotImplementedException();
+        }
         private void StartAnimationLine(object sender, EventArgs e)
         {
             frames += 1; 
             if (frames % 30 == 0)
             {
-
-                // line.DrawLine(canvas1, cntDepth, lineSize)
                 line.DrawLine(canvas1, cntDepth, new Point(0, 0), 2, canvas1.Width , 20);
                 string str = $"{line.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
@@ -226,7 +235,6 @@ namespace FractalGenrator
             }
         }
 
-       
         public static void SaveCanvasToFile(Canvas canvas, int dpi, string filename)
         {
             var renderTarget = new RenderTargetBitmap(1080, 1080, dpi, dpi, PixelFormats.Pbgra32);
@@ -252,6 +260,7 @@ namespace FractalGenrator
         }
         private void UnfollowAll()
         {
+            CompositionTarget.Rendering -= StartAnimationCarpet;
             CompositionTarget.Rendering -= StartAnimationLine;
             CompositionTarget.Rendering -= StartAnimationTree;
             CompositionTarget.Rendering -= StartAnimationFlake;

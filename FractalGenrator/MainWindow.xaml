@@ -12,13 +12,14 @@
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="Depth" Click="Depth_Click"/>
                 <MenuItem Header="Angle" Click="Angle_Click"/>
+                <MenuItem Header="Length Between" Click="LineLength_Click"/>
                 <MenuItem Header="Save to PNG" Click="Save_Click"/>
             </Menu>
             <StackPanel DockPanel.Dock="Left" Background="White" Orientation="Vertical" Width="150">
                 <Button Background="White" Content="Binary Tree" Click="btnTree_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
                 <Button Background="White" Content="Flake" Click="btnFlake_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
                 <Button Background="White" Content="Line" Click="btnLine_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
-                <Button Background="White" Content="Фрактал 4" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
+                <Button Background="White" Content="Carpet" Click="btnCarpet_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
                 <Button Background="White" Content="Фрактал 5" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
             </StackPanel>
             
