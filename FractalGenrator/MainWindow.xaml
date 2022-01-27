@@ -12,7 +12,7 @@
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="Depth" Click="Depth_Click"/>
                 <MenuItem Header="Angle" Click="Angle_Click"/>
-                <MenuItem Header="Length Between" Click="LineLength_Click"/>
+                <MenuItem Header="Length Between"/>
                 <MenuItem Header="Save to PNG" Click="Save_Click"/>
             </Menu>
             <StackPanel DockPanel.Dock="Left" Background="White" Orientation="Vertical" Width="150">
@@ -29,7 +29,8 @@
                         <TextBlock Name="tbLabel" Margin="225,5,0,0"/>
                     </StackPanel>
 
-                    <Canvas Name="canvas1" Width="500" Height="500" Margin="5" Background="AntiqueWhite"/>
+                    <Canvas Name="canvas1" Width="500" Height="500" Margin="5" Background="AntiqueWhite">
+                    </Canvas>
 
 
                 </StackPanel>

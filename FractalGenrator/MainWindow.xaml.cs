@@ -26,6 +26,9 @@ namespace FractalGenrator
         Line line = new("Line");
         Flake flake = new("Flake", ref pl);
         BinaryTree tree = new("Binary Tree", angle);
+        Carpet carpet = new("Carpet", depth);
+        
+        
 
         static Polyline pl = new();
         bool flagTree = false;
@@ -36,7 +39,7 @@ namespace FractalGenrator
         public bool angleCheck = false;
         private static double angle = Math.PI / 5;
         private double SnowflakeSize;
-        private int depth = 10;
+        private static int depth = 10;
         private int cntDepth = 0;
         private int frames = 0;
         double[] dTheta = new double[4] { 0, Math.PI / 3, -2 * Math.PI / 3, Math.PI / 3 };
@@ -174,11 +177,21 @@ namespace FractalGenrator
         private void StartAnimationCarpet(object sender, EventArgs e)
         {
             frames += 1;
-            if (frames % 30 == 0)
+            
+            if (frames % 120 == 0)
             {
-                // carpet.DrawCarpet(canvas1, cntDepth, new Rect);
+                pl.Points.Clear();
+                carpet.DrawCarpet(canvas1, cntDepth, pl);
+                string str = $"{carpet.Name}. Depth = {cntDepth}";
+                tbLabel.Text = str;
+                cntDepth += 1;
+                if (cntDepth > depth)
+                {
+                    tbLabel.Text = $"{carpet.Name}. Depth = {depth}. Finished";
+                    CompositionTarget.Rendering -= StartAnimationLine;
+                    flagLine = false;
+                }
             }
-            throw new NotImplementedException();
         }
         private void StartAnimationLine(object sender, EventArgs e)
         {
