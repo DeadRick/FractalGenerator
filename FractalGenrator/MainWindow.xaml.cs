@@ -201,20 +201,20 @@ namespace FractalGenrator
         {
             frames += 1;
             
-            if (frames % 120 == 0)
+            if (frames % 30 == 0)
             {
                 Polygon pol = new();
                 pol.Fill = Brushes.Black;
                 pl.Points.Clear();
-                carpet.DrawCarpet(canvas1, cntDepth, pol);
+                carpet.DrawCarpet(canvas1, cntDepth, pol, 0);
                 string str = $"{carpet.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
                 cntDepth += 1;
                 if (cntDepth > depth)
                 {
                     tbLabel.Text = $"{carpet.Name}. Depth = {depth}. Finished";
-                    CompositionTarget.Rendering -= StartAnimationLine;
-                    flagLine = false;
+                    CompositionTarget.Rendering -= StartAnimationCarpet;
+                    flagCarpet = false;
                 }
             }
         }
