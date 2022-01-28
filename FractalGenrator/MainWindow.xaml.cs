@@ -69,7 +69,29 @@ namespace FractalGenrator
             frames = 0;
             cntDepth = 1;
         }
+        Polygon pol = new();
+       
 
+        public int cntX = 1;
+        public int cntY = 1;
+        private void test_Click(object sender, RoutedEventArgs e)
+        {
+            Polygon Pow = new();
+            
+            Pow.Fill = Brushes.Black;
+            cntX += 10;
+            cntY += 10;
+            Pow.Points.Add(new(cntX, cntY));
+            Pow.Points.Add(new(cntX + 10, cntY + 10));
+            Pow.Points.Add(new(cntX, cntY + 10));
+            try
+            {
+                canvas1.Children.Add(Pow);
+            } catch {
+                cntX += 20;
+            }
+
+        }
         private void btnCarpet_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagCarpet);
@@ -174,14 +196,17 @@ namespace FractalGenrator
 
         // Start Animation section
 
+
         private void StartAnimationCarpet(object sender, EventArgs e)
         {
             frames += 1;
             
             if (frames % 120 == 0)
             {
+                Polygon pol = new();
+                pol.Fill = Brushes.Black;
                 pl.Points.Clear();
-                carpet.DrawCarpet(canvas1, cntDepth, pl);
+                carpet.DrawCarpet(canvas1, cntDepth, pol);
                 string str = $"{carpet.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
                 cntDepth += 1;
