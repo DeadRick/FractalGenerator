@@ -49,13 +49,14 @@ namespace FractalGenrator
 
             if (iteration == 0)
             {
-                rect.Fill = Brushes.Blue;
-                rect.Points.Add(new(0, 0));
-                rect.Points.Add(new(canvas.Width, 0));
-                rect.Points.Add(new(canvas.Width, canvas.Height));
-                rect.Points.Add(new(0, canvas.Height));
-                canvas.Children.Add(rect);
-                DrawCarpet(canvas, depth, rect, iteration + 1);
+                Polygon firstRect = new Polygon();
+                firstRect.Fill = Brushes.Blue;
+                firstRect.Points.Add(new(0, 0));
+                firstRect.Points.Add(new(canvas.Width, 0));
+                firstRect.Points.Add(new(canvas.Width, canvas.Height));
+                firstRect.Points.Add(new(0, canvas.Height));
+                canvas.Children.Add(firstRect);
+                DrawCarpet(canvas, depth, firstRect, iteration + 1);
             }
             else
             {
@@ -70,7 +71,7 @@ namespace FractalGenrator
                     }
                     double width = ponpon[1].X - ponpon[0].X;
                     double height = ponpon[3].Y - ponpon[0].Y;
-
+                    
                     if (width < 1.0)
                     {
                         return;

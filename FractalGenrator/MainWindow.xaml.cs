@@ -27,14 +27,17 @@ namespace FractalGenrator
         Flake flake = new("Flake", ref pl);
         BinaryTree tree = new("Binary Tree", angle);
         Carpet carpet = new("Carpet", depth);
+        Triangle triangle = new("Triangle");
         
         
 
         static Polyline pl = new();
+        static Polygon pol = new();
         bool flagTree = false;
         bool flagFlake = false;
         bool flagLine = false;
         bool flagCarpet = false;
+        bool flagTriangle = false;
         bool saveCheck = false;
         public bool angleCheck = false;
         private static double angle = Math.PI / 5;
@@ -69,28 +72,12 @@ namespace FractalGenrator
             frames = 0;
             cntDepth = 1;
         }
-        Polygon pol = new();
-       
+        
 
-        public int cntX = 1;
-        public int cntY = 1;
-        private void test_Click(object sender, RoutedEventArgs e)
+        private void btnTriangle_Click(object sender, RoutedEventArgs e)
         {
-            Polygon Pow = new();
-            
-            Pow.Fill = Brushes.Black;
-            cntX += 10;
-            cntY += 10;
-            Pow.Points.Add(new(cntX, cntY));
-            Pow.Points.Add(new(cntX + 10, cntY + 10));
-            Pow.Points.Add(new(cntX, cntY + 10));
-            try
-            {
-                canvas1.Children.Add(Pow);
-            } catch {
-                cntX += 20;
-            }
-
+            ClickSettings(flagTriangle);
+            CompositionTarget.Rendering += StartAnimationTriangle;
         }
         private void btnCarpet_Click(object sender, RoutedEventArgs e)
         {
@@ -196,6 +183,23 @@ namespace FractalGenrator
 
         // Start Animation section
 
+        private void StartAnimationTriangle(object sender, EventArgs e)
+        {
+            frames += 1;
+            if (frames % 30 == 0)
+            {
+                triangle.DrawTriangle(canvas1, cntDepth, pol, 0);
+                string str = $"{triangle.Name}. Depth = {cntDepth}";
+                tbLabel.Text = str;
+                cntDepth += 1;
+                if (cntDepth > depth)
+                {
+                    tbLabel.Text = $"{triangle.Name}. Depth = {depth}. Finished";
+                    CompositionTarget.Rendering -= StartAnimationTriangle;
+                    flagTriangle = false;
+                }
+            }
+        }
 
         private void StartAnimationCarpet(object sender, EventArgs e)
         {
@@ -203,9 +207,6 @@ namespace FractalGenrator
             
             if (frames % 30 == 0)
             {
-                Polygon pol = new();
-                pol.Fill = Brushes.Black;
-                pl.Points.Clear();
                 carpet.DrawCarpet(canvas1, cntDepth, pol, 0);
                 string str = $"{carpet.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
@@ -298,6 +299,7 @@ namespace FractalGenrator
         }
         private void UnfollowAll()
         {
+            CompositionTarget.Rendering -= StartAnimationTriangle;
             CompositionTarget.Rendering -= StartAnimationCarpet;
             CompositionTarget.Rendering -= StartAnimationLine;
             CompositionTarget.Rendering -= StartAnimationTree;
