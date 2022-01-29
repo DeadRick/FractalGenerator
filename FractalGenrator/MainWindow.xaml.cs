@@ -30,8 +30,10 @@ namespace FractalGenrator
         Carpet carpet = new("Carpet", depth);
         Triangle triangle = new("Triangle");
 
+        static SolidColorBrush startGrad;
+        static SolidColorBrush endGrad;
 
-        IEnumerable<Color> gradient = GetGradients(Brushes.Yellow.Color, Brushes.Blue.Color, depth);
+        IEnumerable<Color> gradient;
         static Polyline pl = new();
         static Polygon pol = new();
         bool flagTree = false;
@@ -53,6 +55,16 @@ namespace FractalGenrator
             InitializeComponent();
             Width = System.Windows.SystemParameters.PrimaryScreenWidth / 2;
             Height = System.Windows.SystemParameters.PrimaryScreenHeight / 2;
+            Title = "Fractals";
+
+            startColor.SelectedBrush = Brushes.Yellow;
+            endColor.SelectedBrush = Brushes.Blue;
+
+            startGrad = startColor.SelectedBrush;
+            endGrad = endColor.SelectedBrush;
+
+            gradient = GetGradients(startGrad.Color, endGrad.Color, depth);
+
             double ysize = 0.8 * canvas1.Height / (Math.Sqrt(3) * 4 / 3);
             double xsize = 0.8 * canvas1.Width / 2;
             double size = 0;
@@ -112,6 +124,7 @@ namespace FractalGenrator
         private void ClickSettings(bool flag)
         {
             UnfollowAll();
+            gradient = GetGradients(startColor.SelectedBrush.Color, endColor.SelectedBrush.Color, depth);
             flag = saveCheck = true;
             canvas1.Children.Clear();
             tbLabel.Text = "";
