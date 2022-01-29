@@ -21,6 +21,8 @@
                 <Button Background="White" Content="Line" Click="btnLine_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
                 <Button Background="White" Content="Carpet" Click="btnCarpet_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
                 <Button Background="White" Content="Triangle" Click="btnTriangle_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
+                <Button Background="White" Content="TEST" Click="Test_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
+                <Rectangle Width="100" Height="100" Name="cube"></Rectangle>
             </StackPanel>
             
             <Viewbox x:Name="ViewBox1" Stretch="Uniform">

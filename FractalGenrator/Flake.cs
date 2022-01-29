@@ -32,23 +32,30 @@ namespace FractalGenrator
         private void SnowFlakeEdge(Canvas canvas, int depth, double theta, double distance)
         {
             Point pt = new Point();
+           
+
             if ((depth <= 0) || (distance <= 1.0))
             {
                 pt.X = SnowflakePoint.X + distance * Math.Cos(theta);
                 pt.Y = SnowflakePoint.Y + distance * Math.Sin(theta);
                 pl.Points.Add(pt);
+                
+                
+          
                 SnowflakePoint = pt;
                 return;
             }
             distance *= distanceScale;
             for (int j = 0; j < 4; j++)
             {
+
                 theta += dAngles[j];
+  
                 SnowFlakeEdge(canvas, depth - 1, theta, distance);
             }
         }
-
-        public void DrawSnowFlake(Canvas canvas, double length, int depth)
+        
+        public void DrawSnowFlake(Canvas canvas, double length, int depth, IEnumerable<Color> colors)
         {
             double xmid = canvas.Width / 2;
             double ymid = canvas.Height / 2;
@@ -57,6 +64,13 @@ namespace FractalGenrator
             pta[1] = new Point(xmid + length / 2, ymid - length / 2 * Math.Sqrt(3) / 3);
             pta[2] = new Point(xmid - length / 2, ymid - length / 2 * Math.Sqrt(3) / 3);
             pta[3] = pta[0];
+
+    
+            Color[] clrs = colors.ToArray();
+            SolidColorBrush newbr = new SolidColorBrush(clrs[depth - 1]);
+            pl.Stroke = newbr;
+
+
             pl.Points.Add(pta[0]);
             for (int j = 1; j < pta.Length; j++)
             {

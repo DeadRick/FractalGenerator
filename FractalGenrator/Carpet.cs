@@ -50,6 +50,7 @@ namespace FractalGenrator
             if (iteration == 0)
             {
                 Polygon firstRect = new Polygon();
+                
                 firstRect.Fill = Brushes.Blue;
                 firstRect.Points.Add(new(0, 0));
                 firstRect.Points.Add(new(canvas.Width, 0));
