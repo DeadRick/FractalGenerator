@@ -29,10 +29,11 @@ namespace FractalGenrator
             startDepth = depth;
         }
 
-        private Polygon FillPoly(double x0, double width, double y0, double height)
+        private Polygon FillPoly(double x0, double width, double y0, double height, Color[] colors, int step)
         {
             Polygon pol = new();
-            pol.Fill = Brushes.White;
+            SolidColorBrush newBr = new SolidColorBrush(colors[step - 1]);
+            pol.Fill = newBr;
             Point point00 = new Point(x0, y0);
             Point point01 = new Point(x0 + width, y0);
             Point point11 = new Point(x0 + width, y0 + height);
@@ -44,7 +45,7 @@ namespace FractalGenrator
             return pol;
         }
 
-        public void DrawCarpet(Canvas canvas, int depth, Polygon rect, int iteration)
+        public void DrawCarpet(Canvas canvas, int depth, Polygon rect, int iteration, IEnumerable<Color> colors)
         {
 
             if (iteration == 0)
@@ -57,12 +58,16 @@ namespace FractalGenrator
                 firstRect.Points.Add(new(canvas.Width, canvas.Height));
                 firstRect.Points.Add(new(0, canvas.Height));
                 canvas.Children.Add(firstRect);
-                DrawCarpet(canvas, depth, firstRect, iteration + 1);
+                DrawCarpet(canvas, depth, firstRect, iteration + 1, colors);
             }
             else
             {
                 if (iteration < depth)
-                { 
+                {
+                    Color[] clrs = colors.ToArray();
+                    //SolidColorBrush newBr = new SolidColorBrush(clrs[iteration - 1]);
+
+
                     int cnt = 0;
                     Point[] ponpon = new Point[4];
 
@@ -90,26 +95,26 @@ namespace FractalGenrator
                     double y2 = y0 + height * 2d;
 
 
-                    Polygon pol0_0 = FillPoly(x0, width, y0, height);
-                    Polygon pol1_0 = FillPoly(x1, width, y0, height);
-                    Polygon pol2_0 = FillPoly(x2, width, y0, height);
-                    Polygon pol0_1 = FillPoly(x0, width, y1, height);
-                    Polygon pol1_1 = FillPoly(x1, width, y1, height); // white
-                    Polygon pol2_1 = FillPoly(x2, width, y1, height);
-                    Polygon pol0_2 = FillPoly(x0, width, y2, height);
-                    Polygon pol1_2 = FillPoly(x1, width, y2, height);
-                    Polygon pol2_2 = FillPoly(x2, width, y2, height);
+                    Polygon pol0_0 = FillPoly(x0, width, y0, height, clrs, iteration);
+                    Polygon pol1_0 = FillPoly(x1, width, y0, height, clrs, iteration);
+                    Polygon pol2_0 = FillPoly(x2, width, y0, height, clrs, iteration);
+                    Polygon pol0_1 = FillPoly(x0, width, y1, height, clrs, iteration);
+                    Polygon pol1_1 = FillPoly(x1, width, y1, height, clrs, iteration); // white
+                    Polygon pol2_1 = FillPoly(x2, width, y1, height, clrs, iteration);
+                    Polygon pol0_2 = FillPoly(x0, width, y2, height, clrs, iteration);
+                    Polygon pol1_2 = FillPoly(x1, width, y2, height, clrs, iteration);
+                    Polygon pol2_2 = FillPoly(x2, width, y2, height, clrs, iteration);
 
                     canvas.Children.Add(pol1_1);
  
-                    DrawCarpet(canvas, depth, pol0_0, iteration + 1);
-                    DrawCarpet(canvas, depth, pol1_0, iteration + 1);
-                    DrawCarpet(canvas, depth, pol2_0, iteration + 1);
-                    DrawCarpet(canvas, depth, pol0_1, iteration + 1);
-                    DrawCarpet(canvas, depth, pol2_1, iteration + 1);
-                    DrawCarpet(canvas, depth, pol0_2, iteration + 1);
-                    DrawCarpet(canvas, depth, pol1_2, iteration + 1);
-                    DrawCarpet(canvas, depth, pol2_2, iteration + 1);
+                    DrawCarpet(canvas, depth, pol0_0, iteration + 1, colors);
+                    DrawCarpet(canvas, depth, pol1_0, iteration + 1, colors);
+                    DrawCarpet(canvas, depth, pol2_0, iteration + 1, colors);
+                    DrawCarpet(canvas, depth, pol0_1, iteration + 1, colors);
+                    DrawCarpet(canvas, depth, pol2_1, iteration + 1, colors);
+                    DrawCarpet(canvas, depth, pol0_2, iteration + 1, colors);
+                    DrawCarpet(canvas, depth, pol1_2, iteration + 1, colors);
+                    DrawCarpet(canvas, depth, pol2_2, iteration + 1, colors);
 
 
                 }

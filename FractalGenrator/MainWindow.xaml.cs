@@ -123,21 +123,25 @@ namespace FractalGenrator
         private void btnTriangle_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagTriangle);
+            Title = triangle.Name;
             CompositionTarget.Rendering += StartAnimationTriangle;
         }
         private void btnCarpet_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagCarpet);
+            Title = carpet.Name;
             CompositionTarget.Rendering += StartAnimationCarpet;
         }
         private void btnLine_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagLine);
+            Title = line.Name;
             CompositionTarget.Rendering += StartAnimationLine;
         }
         private void btnFlake_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagFlake);
+            Title = flake.Name;
             canvas1.Children.Add(pl);
             CompositionTarget.Rendering += StartAnimationFlake;
         }
@@ -145,6 +149,7 @@ namespace FractalGenrator
         private void btnTree_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagTree);
+            Title = tree.Name;
             CompositionTarget.Rendering += StartAnimationTree;
         }
 
@@ -255,7 +260,7 @@ namespace FractalGenrator
 
             if (frames % 30 == 0)
             {
-                carpet.DrawCarpet(canvas1, cntDepth, pol, 0);
+                carpet.DrawCarpet(canvas1, cntDepth, pol, 0, gradient);
                 string str = $"{carpet.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
                 cntDepth += 1;
@@ -272,7 +277,8 @@ namespace FractalGenrator
             frames += 1;
             if (frames % 30 == 0)
             {
-                line.DrawLine(canvas1, cntDepth, new Point(0, 0), 2, canvas1.Width, 20);
+                line.DrawLine(canvas1, cntDepth, new Point(0, 0), 2, canvas1.Width, 20, gradient);
+
                 string str = $"{line.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
                 cntDepth += 1;

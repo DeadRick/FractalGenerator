@@ -24,7 +24,7 @@ namespace FractalGenrator
             Name = name;
         }
 
-        public void DrawLine(Canvas canvas, int cntDepth, Point pt, double pixelBetween, double lineLength, double lengthTo)
+        public void DrawLine(Canvas canvas, int cntDepth, Point pt, double pixelBetween, double lineLength, double lengthTo, IEnumerable<Color> colors)
         {
             
             double x1 = pt.X;
@@ -34,7 +34,11 @@ namespace FractalGenrator
 
             System.Windows.Shapes.Line line = new System.Windows.Shapes.Line();
 
-            line.Stroke = Brushes.Black;
+            Color[] clrs = colors.ToArray();
+            SolidColorBrush newBr = new SolidColorBrush(clrs[cntDepth - 1]);
+
+
+            line.Stroke = newBr;
 
             line.StrokeThickness = 10;
             line.X1 = x1;
@@ -45,8 +49,8 @@ namespace FractalGenrator
 
             if (cntDepth > 1 && lineLength > 0.001)
             {
-                DrawLine(canvas, cntDepth - 1, new Point(x1, y1), pixelBetween, lineLength / 3, lengthTo);
-                DrawLine(canvas, cntDepth - 1, new Point(x1 + (lineLength / 3) * 2 , y1), pixelBetween, lineLength / 3, lengthTo);
+                DrawLine(canvas, cntDepth - 1, new Point(x1, y1), pixelBetween, lineLength / 3, lengthTo, colors);
+                DrawLine(canvas, cntDepth - 1, new Point(x1 + (lineLength / 3) * 2 , y1), pixelBetween, lineLength / 3, lengthTo, colors);
             }
             else return;
         }
