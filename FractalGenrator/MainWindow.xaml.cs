@@ -42,6 +42,7 @@ namespace FractalGenrator
         bool flagCarpet = false;
         bool flagTriangle = false;
         bool saveCheck = false;
+        bool gradientCheck = false;
         public bool angleCheck = false;
         private static double angle = Math.PI / 5;
         private double SnowflakeSize;
@@ -94,10 +95,6 @@ namespace FractalGenrator
 
         //}
 
-        private void Test_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
         public static IEnumerable<Color> GetGradients(Color start, Color end, int steps)
         {
             if (steps == 1)
@@ -121,39 +118,53 @@ namespace FractalGenrator
 
         // Buttons
 
-        private void ClickSettings(bool flag)
+        private void ClickSettings(bool flagCheck)
         {
             UnfollowAll();
+            flagCheck = true;
+            saveCheck = true;
             gradient = GetGradients(startColor.SelectedBrush.Color, endColor.SelectedBrush.Color, depth);
-            flag = saveCheck = true;
             canvas1.Children.Clear();
             tbLabel.Text = "";
             frames = 0;
             cntDepth = 1;
         }
 
-
+        private void Gradient_Click(object sender, RoutedEventArgs e)
+        {
+            if (gradientCheck == false)
+            {
+                gradientCheck = true;
+            } else
+            {
+                gradientCheck = false;
+            }
+        }
         private void btnTriangle_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagTriangle);
+            flagTriangle = false;
             Title = triangle.Name;
             CompositionTarget.Rendering += StartAnimationTriangle;
         }
         private void btnCarpet_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagCarpet);
+            flagCarpet = true;
             Title = carpet.Name;
             CompositionTarget.Rendering += StartAnimationCarpet;
         }
         private void btnLine_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagLine);
+            flagLine = true;
             Title = line.Name;
             CompositionTarget.Rendering += StartAnimationLine;
         }
         private void btnFlake_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagFlake);
+            flagFlake = true;
             Title = flake.Name;
             canvas1.Children.Add(pl);
             CompositionTarget.Rendering += StartAnimationFlake;
@@ -162,6 +173,7 @@ namespace FractalGenrator
         private void btnTree_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagTree);
+            flagTree = true;
             Title = tree.Name;
             CompositionTarget.Rendering += StartAnimationTree;
         }
@@ -170,7 +182,7 @@ namespace FractalGenrator
         {
             if (saveCheck)
             {
-                if (flagTree || flagFlake || flagLine || flagCarpet)
+                if (flagTree || flagFlake || flagLine || flagCarpet || flagTriangle)
                 {
                     MessageBox.Show("Please, wait the end of rendering.");
                 }
@@ -218,7 +230,7 @@ namespace FractalGenrator
         {
             DepthWindow depthWindow = new(depth);
 
-            if (flagFlake || flagTree || flagLine || flagCarpet)
+            if (flagFlake || flagTree || flagLine || flagCarpet || flagTriangle)
             {
                 MessageBox.Show("Wait the end of rendering!");
                 depthWindow.Close();
@@ -254,8 +266,8 @@ namespace FractalGenrator
             frames += 1;
             if (frames % 30 == 0)
             {
-                triangle.DrawTriangle(canvas1, cntDepth, pol, 0, gradient);
-                string str = $"{triangle.Name}. Depth = {cntDepth}";
+                triangle.DrawTriangle(canvas1, cntDepth, pol, 0, gradient, gradientCheck);
+                string str = $"{triangle.Name}. Depth = {cntDepth}.";
                 tbLabel.Text = str;
                 cntDepth += 1;
                 if (cntDepth > depth)
@@ -263,6 +275,7 @@ namespace FractalGenrator
                     tbLabel.Text = $"{triangle.Name}. Depth = {depth}. Finished";
                     CompositionTarget.Rendering -= StartAnimationTriangle;
                     flagTriangle = false;
+                    saveCheck = false;
                 }
             }
         }
@@ -282,6 +295,7 @@ namespace FractalGenrator
                     tbLabel.Text = $"{carpet.Name}. Depth = {depth}. Finished";
                     CompositionTarget.Rendering -= StartAnimationCarpet;
                     flagCarpet = false;
+                    saveCheck = false;
                 }
             }
         }
@@ -300,6 +314,7 @@ namespace FractalGenrator
                     tbLabel.Text = $"{line.Name}. Depth = {depth}. Finished";
                     CompositionTarget.Rendering -= StartAnimationLine;
                     flagLine = false;
+                    saveCheck = false;
                 }
             }
         }
@@ -317,6 +332,7 @@ namespace FractalGenrator
                     tbLabel.Text = $"{tree.Name}. Depth = {depth}. Finished";
                     CompositionTarget.Rendering -= StartAnimationTree;
                     flagTree = false;
+                    saveCheck = false;
                 }
             }
         }
@@ -337,6 +353,7 @@ namespace FractalGenrator
                     tbLabel.Text = $"{flake.Name} - Depth = {depth}. Finished";
                     CompositionTarget.Rendering -= StartAnimationFlake;
                     flagFlake = false;
+                    saveCheck = false;
                 }
             }
         }
