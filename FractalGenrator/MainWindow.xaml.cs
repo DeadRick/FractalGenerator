@@ -323,7 +323,7 @@ namespace FractalGenrator
             frames += 1;
             if (frames % 10 == 0)
             {
-                tree.DrawBinaryTree(canvas1, cntDepth, new Point(canvas1.Width / 2, canvas1.Height * 0.77), 0.2 * canvas1.Width, 3 * Math.PI / 2, angleCheck, gradient, 2, angle + 25.30);
+                tree.DrawBinaryTree(canvas1, cntDepth, new Point(canvas1.Width / 2, canvas1.Height * 0.77), 0.2 * canvas1.Width, 3 * Math.PI / 2, angleCheck, gradient, gradientCheck, 2, angle + 25.30);
                 string str = $"{tree.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
                 cntDepth += 1;
