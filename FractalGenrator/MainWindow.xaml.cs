@@ -286,7 +286,7 @@ namespace FractalGenrator
 
             if (frames % 30 == 0)
             {
-                carpet.DrawCarpet(canvas1, cntDepth, pol, 0, gradient);
+                carpet.DrawCarpet(canvas1, cntDepth, pol, 0, gradient, gradientCheck);
                 string str = $"{carpet.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
                 cntDepth += 1;
