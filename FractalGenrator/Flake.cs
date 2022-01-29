@@ -55,7 +55,7 @@ namespace FractalGenrator
             }
         }
         
-        public void DrawSnowFlake(Canvas canvas, double length, int depth, IEnumerable<Color> colors)
+        public void DrawSnowFlake(Canvas canvas, double length, int depth, IEnumerable<Color> colors, bool gradCheck)
         {
             double xmid = canvas.Width / 2;
             double ymid = canvas.Height / 2;
@@ -65,10 +65,16 @@ namespace FractalGenrator
             pta[2] = new Point(xmid - length / 2, ymid - length / 2 * Math.Sqrt(3) / 3);
             pta[3] = pta[0];
 
-    
-            Color[] clrs = colors.ToArray();
-            SolidColorBrush newbr = new SolidColorBrush(clrs[depth - 1]);
-            pl.Stroke = newbr;
+            if (gradCheck)
+            {
+                Color[] clrs = colors.ToArray();
+                SolidColorBrush newbr = new SolidColorBrush(clrs[depth - 1]);
+                pl.Stroke = newbr;
+            }
+            else
+            {
+                pl.Stroke = Brushes.Black;
+            }
 
 
             pl.Points.Add(pta[0]);

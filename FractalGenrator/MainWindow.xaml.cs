@@ -343,7 +343,7 @@ namespace FractalGenrator
             if (frames % 20 == 0)
             {
                 pl.Points.Clear();
-                flake.DrawSnowFlake(canvas1, SnowflakeSize, cntDepth, gradient);
+                flake.DrawSnowFlake(canvas1, SnowflakeSize, cntDepth, gradient, gradientCheck);
                 string str = "Snow Flake - Depth = " + cntDepth.ToString();
                 tbLabel.Text = str;
                 cntDepth += 1;
