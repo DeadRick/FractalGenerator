@@ -241,7 +241,7 @@ namespace FractalGenrator
             frames += 1;
             if (frames % 30 == 0)
             {
-                triangle.DrawTriangle(canvas1, cntDepth, pol, 0);
+                triangle.DrawTriangle(canvas1, cntDepth, pol, 0, gradient);
                 string str = $"{triangle.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
                 cntDepth += 1;

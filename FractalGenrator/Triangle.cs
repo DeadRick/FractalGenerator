@@ -24,16 +24,18 @@ namespace FractalGenrator
             Name = name;
         }
 
-        private Polygon CreateTriangle(Point top, Point right, Point left, Polygon pol) 
+        private Polygon CreateTriangle(Point top, Point right, Point left, Polygon pol, Color[] colors, int step) 
         {
+            SolidColorBrush newBr = new SolidColorBrush(colors[step]);
             pol.Points.Add(top);
             pol.Points.Add(right);
             pol.Points.Add(left);
-            pol.Stroke = Brushes.Black;
+            pol.Stroke = newBr;
             return pol;
         }
-        public void DrawTriangle(Canvas canvas, int depthCnt, Polygon triangle, int iteration)
+        public void DrawTriangle(Canvas canvas, int depthCnt, Polygon triangle, int iteration, IEnumerable<Color> gradient)
         {
+            Color[] colors = gradient.ToArray();
             if (iteration == 0)
             {
                 Polygon firstTria = new();
@@ -42,10 +44,10 @@ namespace FractalGenrator
                 Point top = new(canvas.Width / 2d, 0);
                 Point right = new(canvas.Width, canvas.Height);
                 Point left = new(0, canvas.Height);
-                triangle = CreateTriangle(top, right, left, firstTria);
+                triangle = CreateTriangle(top, right, left, firstTria, colors, iteration);
                 canvas.Children.Add(firstTria);
 
-                DrawTriangle(canvas, depthCnt, triangle, iteration + 1);
+                DrawTriangle(canvas, depthCnt, triangle, iteration + 1, gradient);
             } else
             {
                 if (iteration < depthCnt)
@@ -63,13 +65,13 @@ namespace FractalGenrator
                     Point rightMid = new((tria[0].X + tria[1].X) / 2d, (tria[0].Y + tria[1].Y) / 2d);
                     Point bottomMid = new((tria[1].X + tria[2].X) / 2d, (tria[1].Y + tria[2].Y) / 2d);
 
-                    Polygon finalTria = CreateTriangle(leftMid, rightMid, bottomMid, new Polygon());
+                    Polygon finalTria = CreateTriangle(leftMid, rightMid, bottomMid, new Polygon(), colors, iteration);
 
                     canvas.Children.Add(finalTria);
 
-                    DrawTriangle(canvas, depthCnt, CreateTriangle(tria[0], leftMid, rightMid, new Polygon()), iteration + 1);
-                    DrawTriangle(canvas, depthCnt, CreateTriangle(leftMid, tria[2], bottomMid, new Polygon()), iteration + 1);
-                    DrawTriangle(canvas, depthCnt, CreateTriangle(rightMid, bottomMid, tria[1], new Polygon()), iteration + 1);
+                    DrawTriangle(canvas, depthCnt, CreateTriangle(tria[0], leftMid, rightMid, new Polygon(), colors, iteration), iteration + 1, gradient);
+                    DrawTriangle(canvas, depthCnt, CreateTriangle(leftMid, tria[2], bottomMid, new Polygon(), colors, iteration), iteration + 1, gradient);
+                    DrawTriangle(canvas, depthCnt, CreateTriangle(rightMid, bottomMid, tria[1], new Polygon(), colors, iteration), iteration + 1, gradient);
 
                 }
                 else return;
