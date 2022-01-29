@@ -304,7 +304,7 @@ namespace FractalGenrator
             frames += 1;
             if (frames % 30 == 0)
             {
-                line.DrawLine(canvas1, cntDepth, new Point(0, 0), 2, canvas1.Width, 20, gradient);
+                line.DrawLine(canvas1, cntDepth, new Point(0, 0), 2, canvas1.Width, 20, gradient, gradientCheck);
 
                 string str = $"{line.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
