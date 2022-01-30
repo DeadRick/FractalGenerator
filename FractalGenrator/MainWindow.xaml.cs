@@ -30,6 +30,8 @@ namespace FractalGenrator
         Carpet carpet = new("Carpet", depth);
         Triangle triangle = new("Triangle");
 
+        ScaleTransform transformScale = new();
+
         LinkedList<int> lastFractal = new();
 
         static SolidColorBrush startGrad;
@@ -68,6 +70,9 @@ namespace FractalGenrator
 
             gradient = GetGradients(startGrad.Color, endGrad.Color, depth);
 
+            canvas1.LayoutTransform = transformScale;
+            canvas1.Width = canvas1.Height;
+
             double ysize = 0.8 * canvas1.Height / (Math.Sqrt(3) * 4 / 3);
             double xsize = 0.8 * canvas1.Width / 2;
             double size = 0;
@@ -79,6 +84,15 @@ namespace FractalGenrator
             pl.Stroke = Brushes.Black;
         }
 
+        int SelectedZoom;
+
+        private void ZoomSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            SelectedZoom = (int)sliderZoom.Value;
+            transformScale.ScaleX = SelectedZoom;
+            transformScale.ScaleY = SelectedZoom;
+            zoomLabel.Text = $"Zoom: {(int)sliderZoom.Value}";
+        }
         public static IEnumerable<Color> GetGradients(Color start, Color end, int steps)
         {
             if (steps == 1)
@@ -179,7 +193,7 @@ namespace FractalGenrator
                     if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
                     {
                         path = dialog.FileName + @"\fractal.png";
-                        SaveCanvasToFile(canvas1, 250, path);
+                        SaveCanvasToFile(canvas1, 1000, path);
                     }
                 }
             }
@@ -228,11 +242,20 @@ namespace FractalGenrator
                     {
                         depth = depthFromWindow;
                         cntDepth = 1;
-                        GetGradients(startColor.SelectedBrush.Color, endColor.SelectedBrush.Color, depthFromWindow);
+                        
+                        
                         MessageBox.Show("Depth was succesfully changed");
                         if (lastFractal.Count != 0)
                         {
-                            switch(lastFractal.Last.Value)
+                            if (lastFractal.Last.Value == 1)
+                            {
+                                gradient = GetGradients(endColor.SelectedBrush.Color, startColor.SelectedBrush.Color, depthFromWindow);
+                            }
+                            else
+                            {
+                                gradient = GetGradients(startColor.SelectedBrush.Color, endColor.SelectedBrush.Color, depthFromWindow);
+                            }
+                            switch (lastFractal.Last.Value)
                             {
                                 case 1:
                                     canvas1.Children.Clear();
@@ -330,7 +353,7 @@ namespace FractalGenrator
         private void StartAnimationTree(object sender, EventArgs e)
         {
             frames += 1;
-            if (frames % 10 == 0)
+            if (frames % 20 == 0)
             {
                 tree.DrawBinaryTree(canvas1, cntDepth, new Point(canvas1.Width / 2, canvas1.Height * 0.77), 0.2 * canvas1.Width, 3 * Math.PI / 2, angleCheck, gradient, gradientCheck, 2, angle + 25.30);
                 string str = $"{tree.Name}. Depth = {cntDepth}";
@@ -367,7 +390,7 @@ namespace FractalGenrator
 
         public static void SaveCanvasToFile(Canvas canvas, int dpi, string filename)
         {
-            var renderTarget = new RenderTargetBitmap(1080, 1080, dpi, dpi, PixelFormats.Pbgra32);
+            var renderTarget = new RenderTargetBitmap(5000, 5000, dpi, dpi, PixelFormats.Pbgra32);
             renderTarget.Render(canvas);
             SaveRTBAsPNGBMP(renderTarget, filename);
         }

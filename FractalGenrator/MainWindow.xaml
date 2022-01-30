@@ -9,7 +9,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
         <DockPanel Background="AntiqueWhite">
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="Depth" Click="Depth_Click" x:Name="depthButton"/>
@@ -17,6 +16,7 @@
                 <MenuItem Header="Length Between"/>
                 <MenuItem Header="Save to PNG" Click="Save_Click" x:Name="saveButton"/>
                 <MenuItem Header="Gradient" x:Name="mnuActions" IsCheckable="true" Click="Gradient_Click"/>
+                <TextBlock Name="tbLabel" IsEnabled="False"/>
             </Menu>
             <StackPanel DockPanel.Dock="Left" Background="White" Orientation="Vertical" Width="150">
                 <Button Background="White" Content="Binary Tree" Click="btnTree_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
@@ -26,26 +26,23 @@
                 <Button Background="White" Content="Triangle" Click="btnTriangle_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
                 <hw:ColorPickerButton  Width="100" Height="30" Margin="10" Content="Start Color" x:Name="startColor"/>
                 <hw:ColorPickerButton  Width="100" Height="30" Margin="10" Content="End Color" x:Name="endColor"/>
-                <Rectangle Width="100" Height="100" Name="cube"></Rectangle>
+                <TextBlock x:Name="zoomLabel"/>
+                <Slider x:Name="sliderZoom" Minimum="1" Maximum="25" ValueChanged="ZoomSlider_OnValueChanged"></Slider>
             </StackPanel>
-            
-            <Viewbox x:Name="ViewBox1" Stretch="Uniform">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="5,5,5,0">
-                        <TextBlock Name="tbLabel" Margin="225,5,0,0"/>
-                    </StackPanel>
 
-                    <Canvas Name="canvas1" Width="500" Height="500" Margin="5" Background="AntiqueWhite">
+
+
+
+                <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+                    <Canvas Name="canvas1" Width="350" Height="350" Margin="5">
                     </Canvas>
+                </ScrollViewer>
 
-
-                </StackPanel>
-            </Viewbox>
 
 
         </DockPanel>
 
-        
+
 
     </Grid>
 </Window>

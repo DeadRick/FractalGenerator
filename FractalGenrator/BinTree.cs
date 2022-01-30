@@ -28,6 +28,7 @@ namespace FractalGenrator
 
         private double lengthScale = 0.7;
         private double angleFract = Math.PI / 5;
+        private double angleChanged;
 
         public void DrawBinaryTree(Canvas canvas, int cntDepth, Point pt, double length, double angl, bool angleCheck, IEnumerable<Color> colors, bool gradCheck, double thickness = 1.0, double anglePlus = 1)
         { 
@@ -47,6 +48,7 @@ namespace FractalGenrator
             }
             line.StrokeThickness = thickness * 0.88;
             thickness *= 0.88;
+            angleChanged = anglePlus * Math.PI / 180;
 
             line.X1 = pt.X;
             line.Y1 = pt.Y;
@@ -63,16 +65,10 @@ namespace FractalGenrator
                 }
                 else
                 {
-                    if (anglePlus < 0)
-                    {
-                        DrawBinaryTree(canvas, cntDepth - 1, new Point(x1, y1), length * lengthScale, angl + angleFract - anglePlus, angleCheck, colors, gradCheck, thickness);
-                        DrawBinaryTree(canvas, cntDepth - 1, new Point(x1, y1), length * lengthScale, angl - angleFract - anglePlus, angleCheck, colors, gradCheck, thickness);
-                    }
-                    else
-                    {
-                        DrawBinaryTree(canvas, cntDepth - 1, new Point(x1, y1), length * lengthScale, angl + angleFract + anglePlus, angleCheck, colors, gradCheck, thickness);
-                        DrawBinaryTree(canvas, cntDepth - 1, new Point(x1, y1), length * lengthScale, angl - angleFract + anglePlus, angleCheck, colors, gradCheck, thickness);
-                    }
+                        
+                    DrawBinaryTree(canvas, cntDepth - 1, new Point(x1, y1), length * lengthScale, angl + anglePlus, angleCheck, colors, gradCheck, thickness);
+                    DrawBinaryTree(canvas, cntDepth - 1, new Point(x1, y1), length * lengthScale, angl - anglePlus, angleCheck, colors, gradCheck, thickness);
+                    
 
                 }
             }
