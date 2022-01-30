@@ -18,19 +18,18 @@ namespace FractalGenrator
     public partial class BinaryTree : GeneralFractal
     {
         public override string Name { get; }
-        public double Angle { get; }
 
-        public BinaryTree(string name, double angle) : base(name)
+        public BinaryTree(string name) : base(name)
         {
-            Name = name;
-            Angle = angle;
+            Name = name;   
         }
 
         private double lengthScale = 0.7;
         private double angleFract = Math.PI / 5;
-        private double angleChanged;
+        private double angleCheckedLeft;
+        private double angleCheckedRight;
 
-        public void DrawBinaryTree(Canvas canvas, int cntDepth, Point pt, double length, double angl, bool angleCheck, IEnumerable<Color> colors, bool gradCheck, double thickness = 1.0, double anglePlus = 1)
+        public void DrawBinaryTree(Canvas canvas, int cntDepth, Point pt, double length, double angl, bool angleCheck, IEnumerable<Color> colors, bool gradCheck, double thickness = 1.0, double angleL = 30, double angleR = 30)
         { 
             double x1 = pt.X + length * Math.Cos(angl);
             double y1 = pt.Y + length * Math.Sin(angl);
@@ -40,7 +39,7 @@ namespace FractalGenrator
             if (gradCheck)
             {
                 Color[] clrs = colors.ToArray();
-                    SolidColorBrush newBr = new SolidColorBrush(clrs[cntDepth - 1]);
+                SolidColorBrush newBr = new SolidColorBrush(clrs[cntDepth - 1]);
                 line.Stroke = newBr;
             } else
             {
@@ -48,7 +47,9 @@ namespace FractalGenrator
             }
             line.StrokeThickness = thickness * 0.88;
             thickness *= 0.88;
-            angleChanged = anglePlus * Math.PI / 180;
+
+            angleCheckedLeft = angleL * Math.PI / 180;
+            angleCheckedRight = angleR * Math.PI / 180;
 
             line.X1 = pt.X;
             line.Y1 = pt.Y;
@@ -60,16 +61,13 @@ namespace FractalGenrator
             {
                 if (!angleCheck)
                 {
-                    DrawBinaryTree(canvas, cntDepth - 1, new Point(x1, y1), length * lengthScale, angl + angleFract, angleCheck, colors, gradCheck, thickness);
-                    DrawBinaryTree(canvas, cntDepth - 1, new Point(x1, y1), length * lengthScale, angl - angleFract, angleCheck, colors, gradCheck, thickness);
+                    DrawBinaryTree(canvas, cntDepth - 1, new Point(x1, y1), length * lengthScale, angl + angleFract, angleCheck, colors, gradCheck, thickness, angleL, angleR);
+                    DrawBinaryTree(canvas, cntDepth - 1, new Point(x1, y1), length * lengthScale, angl - angleFract, angleCheck, colors, gradCheck, thickness, angleL, angleR);
                 }
                 else
                 {
-                        
-                    DrawBinaryTree(canvas, cntDepth - 1, new Point(x1, y1), length * lengthScale, angl + anglePlus, angleCheck, colors, gradCheck, thickness);
-                    DrawBinaryTree(canvas, cntDepth - 1, new Point(x1, y1), length * lengthScale, angl - anglePlus, angleCheck, colors, gradCheck, thickness);
-                    
-
+                    DrawBinaryTree(canvas, cntDepth - 1, new Point(x1, y1), length * lengthScale, angl + angleCheckedRight, true, colors, gradCheck, thickness, angleL, angleR);
+                    DrawBinaryTree(canvas, cntDepth - 1, new Point(x1, y1), length * lengthScale, angl - angleCheckedLeft, true, colors, gradCheck, thickness, angleL, angleR);
                 }
             }
             else

@@ -6,30 +6,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FractalGenrator"
         mc:Ignorable="d"
-        Title="Window1" Height="275" Width="300">
+        Title="Window1" Height="200" Width="300">
     <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
             <RowDefinition Height="20" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+    
+        <TextBlock>Angle of Binary Tree.</TextBlock>
+        <TextBlock Grid.Row="1" x:Name="leftLabel"> Left: </TextBlock>
+        <Slider Orientation="Horizontal"  Grid.Row="2" Minimum="-180" Maximum="180" x:Name="slider1" ValueChanged="slider1_ValueChanged"></Slider>
+        <TextBlock Grid.Row="3" x:Name="rightLabel"> Right:</TextBlock>
+        <Slider Orientation="Horizontal"  Grid.Row="4" Minimum="-180" Maximum="180" x:Name="slider2" ValueChanged="slider2_ValueChanged"></Slider>
 
-        <TextBlock>Angle of Binary Tree:</TextBlock>
-        <Slider Orientation="Horizontal"  Grid.Row="1" Minimum="90" Maximum="180" x:Name="slider"></Slider>
-        <Viewbox Grid.Row="2">
-            <Canvas Width="100" Height="45">
-                <Canvas.RenderTransform>
-                    <TranslateTransform X="50" Y="30"/>
-                </Canvas.RenderTransform>
-                <Path Data="M 0 -20 L 0 10 0 10" Stroke="Black" Fill="Black">
-                    <Path.RenderTransform>
-                        <RotateTransform x:Name="rotateArrow" Angle="{Binding ElementName=slider, Path=Value}"/>
-                    </Path.RenderTransform>
-                </Path>
-            </Canvas>
-        </Viewbox>
-        <WrapPanel Grid.Row="3" HorizontalAlignment="Center" Margin="0,15,0,0">
+        <WrapPanel Grid.Row="5" HorizontalAlignment="Center" Margin="0,0,0,0">
             <Button IsDefault="True" Click="AcceptAngle_Click" MinWidth="60" Margin="0,0,10,0">Apply</Button>
             <Button IsCancel="True" Click="Default_Click" MinWidth="60">Default</Button>
         </WrapPanel>

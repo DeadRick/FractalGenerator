@@ -18,7 +18,7 @@ namespace FractalGenrator
     public partial class Line : GeneralFractal
     {
         public override string Name { get; }
-
+        
         public Line(string name) : base(name)
         {
             Name = name;

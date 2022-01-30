@@ -26,13 +26,15 @@ namespace FractalGenrator
     {
         Line line = new("Line");
         Flake flake = new("Flake", ref pl);
-        BinaryTree tree = new("Binary Tree", angle);
+        BinaryTree tree = new("Binary Tree");
         Carpet carpet = new("Carpet", depth);
         Triangle triangle = new("Triangle");
 
         ScaleTransform transformScale = new();
 
         LinkedList<int> lastFractal = new();
+
+        //private Delegate LastMethod;
 
         static SolidColorBrush startGrad;
         static SolidColorBrush endGrad;
@@ -48,7 +50,8 @@ namespace FractalGenrator
         bool saveCheck = false;
         bool gradientCheck = false;
         public bool angleCheck = false;
-        private static double angle = Math.PI / 5;
+        private static double angleL;
+        private static double angleR;
         private double SnowflakeSize;
         private static int depth = 10;
         private int cntDepth = 0;
@@ -59,7 +62,7 @@ namespace FractalGenrator
         {
             InitializeComponent();
             Width = System.Windows.SystemParameters.PrimaryScreenWidth / 2;
-            Height = System.Windows.SystemParameters.PrimaryScreenHeight / 2;
+            Height = (System.Windows.SystemParameters.PrimaryScreenHeight / 2) + 10;
             Title = "Fractals";
 
             startColor.SelectedBrush = Brushes.Brown;
@@ -193,7 +196,7 @@ namespace FractalGenrator
                     if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
                     {
                         path = dialog.FileName + @"\fractal.png";
-                        SaveCanvasToFile(canvas1, 1000, path);
+                        SaveCanvasToFile(canvas1, 500, path);
                     }
                 }
             }
@@ -208,7 +211,8 @@ namespace FractalGenrator
 
                 if (angleWindow.ShowDialog() == true)
                 {
-                    angle = angleWindow.slider.Value;
+                    angleL = angleWindow.slider1.Value;
+                    angleR = angleWindow.slider2.Value;
                     angleCheck = true;
                     MessageBox.Show("Angle of Binary Tree was changed!");
                     angleWindow.Close();
@@ -247,6 +251,7 @@ namespace FractalGenrator
                         MessageBox.Show("Depth was succesfully changed");
                         if (lastFractal.Count != 0)
                         {
+                            canvas1.Children.Clear();
                             if (lastFractal.Last.Value == 1)
                             {
                                 gradient = GetGradients(endColor.SelectedBrush.Color, startColor.SelectedBrush.Color, depthFromWindow);
@@ -258,25 +263,21 @@ namespace FractalGenrator
                             switch (lastFractal.Last.Value)
                             {
                                 case 1:
-                                    canvas1.Children.Clear();
                                     CompositionTarget.Rendering += StartAnimationTree;
                                     break;
                                 case 2:
-                                    canvas1.Children.Clear();
                                     CompositionTarget.Rendering += StartAnimationFlake;
                                     break;
                                 case 3:
-                                    canvas1.Children.Clear();
                                     CompositionTarget.Rendering += StartAnimationLine;
                                     break;
                                 case 4:
-                                    canvas1.Children.Clear();
                                     CompositionTarget.Rendering += StartAnimationCarpet;
                                     break;
                                 case 5:
-                                    canvas1.Children.Clear();
                                     CompositionTarget.Rendering += StartAnimationTriangle;
                                     break;
+                               
                             }
                         }
                     }
@@ -355,7 +356,7 @@ namespace FractalGenrator
             frames += 1;
             if (frames % 20 == 0)
             {
-                tree.DrawBinaryTree(canvas1, cntDepth, new Point(canvas1.Width / 2, canvas1.Height * 0.77), 0.2 * canvas1.Width, 3 * Math.PI / 2, angleCheck, gradient, gradientCheck, 2, angle + 25.30);
+                tree.DrawBinaryTree(canvas1, cntDepth, new Point(canvas1.Width / 2, canvas1.Height * 0.77), 0.2 * canvas1.Width, 3 * Math.PI / 2, angleCheck, gradient, gradientCheck, 2, angleL, angleR);
                 string str = $"{tree.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
                 cntDepth += 1;
