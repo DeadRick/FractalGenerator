@@ -30,6 +30,8 @@ namespace FractalGenrator
         Carpet carpet = new("Carpet", depth);
         Triangle triangle = new("Triangle");
 
+        LinkedList<int> lastFractal = new();
+
         static SolidColorBrush startGrad;
         static SolidColorBrush endGrad;
 
@@ -58,8 +60,8 @@ namespace FractalGenrator
             Height = System.Windows.SystemParameters.PrimaryScreenHeight / 2;
             Title = "Fractals";
 
-            startColor.SelectedBrush = Brushes.Yellow;
-            endColor.SelectedBrush = Brushes.Blue;
+            startColor.SelectedBrush = Brushes.Brown;
+            endColor.SelectedBrush = Brushes.Green;
 
             startGrad = startColor.SelectedBrush;
             endGrad = endColor.SelectedBrush;
@@ -76,24 +78,6 @@ namespace FractalGenrator
             SnowflakeSize = 2 * size;
             pl.Stroke = Brushes.Black;
         }
-
-
-
-        //int cntIter = 10;
-        //private void ColorChange()
-        //{
-
-        //    IEnumerable<Color> col = GetGradients(Brushes.Black.Color, Brushes.Blue.Color, cntIter);
-        //    foreach (var item in col)
-        //    {
-        //        Thread.Sleep(60);
-        //        tbLabel.Text += item.ToString();
-        //        SolidColorBrush newBr = new SolidColorBrush(item);
-        //        cube.Fill = newBr;
-        //    }
-
-
-        //}
 
         public static IEnumerable<Color> GetGradients(Color start, Color end, int steps)
         {
@@ -118,11 +102,11 @@ namespace FractalGenrator
 
         // Buttons
 
-        private void ClickSettings(bool flagCheck)
+        private void ClickSettings(bool flagCheck, int fractal)
         {
             UnfollowAll();
-            flagCheck = true;
             saveCheck = true;
+            lastFractal.AddLast(fractal);
             gradient = GetGradients(startColor.SelectedBrush.Color, endColor.SelectedBrush.Color, depth);
             canvas1.Children.Clear();
             tbLabel.Text = "";
@@ -142,28 +126,28 @@ namespace FractalGenrator
         }
         private void btnTriangle_Click(object sender, RoutedEventArgs e)
         {
-            ClickSettings(flagTriangle);
+            ClickSettings(flagTriangle, 5);
             flagTriangle = false;
             Title = triangle.Name;
             CompositionTarget.Rendering += StartAnimationTriangle;
         }
         private void btnCarpet_Click(object sender, RoutedEventArgs e)
         {
-            ClickSettings(flagCarpet);
+            ClickSettings(flagCarpet, 4);
             flagCarpet = true;
             Title = carpet.Name;
             CompositionTarget.Rendering += StartAnimationCarpet;
         }
         private void btnLine_Click(object sender, RoutedEventArgs e)
         {
-            ClickSettings(flagLine);
+            ClickSettings(flagLine, 3);
             flagLine = true;
             Title = line.Name;
             CompositionTarget.Rendering += StartAnimationLine;
         }
         private void btnFlake_Click(object sender, RoutedEventArgs e)
         {
-            ClickSettings(flagFlake);
+            ClickSettings(flagFlake, 2);
             flagFlake = true;
             Title = flake.Name;
             canvas1.Children.Add(pl);
@@ -172,7 +156,8 @@ namespace FractalGenrator
 
         private void btnTree_Click(object sender, RoutedEventArgs e)
         {
-            ClickSettings(flagTree);
+            ClickSettings(flagTree, 1);
+            gradient = GetGradients(endColor.SelectedBrush.Color, startColor.SelectedBrush.Color, depth);
             flagTree = true;
             Title = tree.Name;
             CompositionTarget.Rendering += StartAnimationTree;
@@ -242,8 +227,35 @@ namespace FractalGenrator
                     if (int.TryParse(depthWindow.DepthText, out int depthFromWindow) && (depthFromWindow >= 1) && (depthFromWindow <= 20))
                     {
                         depth = depthFromWindow;
-                        gradient = GetGradients(Brushes.Yellow.Color, Brushes.Blue.Color, depthFromWindow);
+                        cntDepth = 1;
+                        GetGradients(startColor.SelectedBrush.Color, endColor.SelectedBrush.Color, depthFromWindow);
                         MessageBox.Show("Depth was succesfully changed");
+                        if (lastFractal.Count != 0)
+                        {
+                            switch(lastFractal.Last.Value)
+                            {
+                                case 1:
+                                    canvas1.Children.Clear();
+                                    CompositionTarget.Rendering += StartAnimationTree;
+                                    break;
+                                case 2:
+                                    canvas1.Children.Clear();
+                                    CompositionTarget.Rendering += StartAnimationFlake;
+                                    break;
+                                case 3:
+                                    canvas1.Children.Clear();
+                                    CompositionTarget.Rendering += StartAnimationLine;
+                                    break;
+                                case 4:
+                                    canvas1.Children.Clear();
+                                    CompositionTarget.Rendering += StartAnimationCarpet;
+                                    break;
+                                case 5:
+                                    canvas1.Children.Clear();
+                                    CompositionTarget.Rendering += StartAnimationTriangle;
+                                    break;
+                            }
+                        }
                     }
                     else
                     {
@@ -273,9 +285,8 @@ namespace FractalGenrator
                 if (cntDepth > depth)
                 {
                     tbLabel.Text = $"{triangle.Name}. Depth = {depth}. Finished";
+                    Permission();
                     CompositionTarget.Rendering -= StartAnimationTriangle;
-                    flagTriangle = false;
-                    saveCheck = false;
                 }
             }
         }
@@ -293,9 +304,8 @@ namespace FractalGenrator
                 if (cntDepth > depth)
                 {
                     tbLabel.Text = $"{carpet.Name}. Depth = {depth}. Finished";
+                    Permission();
                     CompositionTarget.Rendering -= StartAnimationCarpet;
-                    flagCarpet = false;
-                    saveCheck = false;
                 }
             }
         }
@@ -312,9 +322,8 @@ namespace FractalGenrator
                 if (cntDepth > depth)
                 {
                     tbLabel.Text = $"{line.Name}. Depth = {depth}. Finished";
+                    Permission();
                     CompositionTarget.Rendering -= StartAnimationLine;
-                    flagLine = false;
-                    saveCheck = false;
                 }
             }
         }
@@ -330,9 +339,8 @@ namespace FractalGenrator
                 if (cntDepth > depth)
                 {
                     tbLabel.Text = $"{tree.Name}. Depth = {depth}. Finished";
+                    Permission();
                     CompositionTarget.Rendering -= StartAnimationTree;
-                    flagTree = false;
-                    saveCheck = false;
                 }
             }
         }
@@ -351,9 +359,8 @@ namespace FractalGenrator
                 if (cntDepth > depth)
                 {
                     tbLabel.Text = $"{flake.Name} - Depth = {depth}. Finished";
+                    Permission();
                     CompositionTarget.Rendering -= StartAnimationFlake;
-                    flagFlake = false;
-                    saveCheck = false;
                 }
             }
         }
@@ -380,6 +387,15 @@ namespace FractalGenrator
             {
                 MessageBox.Show("Error creating image.");
             }
+        }
+
+        private void Permission()
+        {
+            flagTree = false;
+            flagFlake = false;
+            flagLine = false;
+            flagTriangle = false;
+            flagCarpet = false;
         }
         private void UnfollowAll()
         {

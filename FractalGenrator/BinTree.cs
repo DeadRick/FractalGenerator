@@ -39,7 +39,7 @@ namespace FractalGenrator
             if (gradCheck)
             {
                 Color[] clrs = colors.ToArray();
-                SolidColorBrush newBr = new SolidColorBrush(clrs[cntDepth - 1]);
+                    SolidColorBrush newBr = new SolidColorBrush(clrs[cntDepth - 1]);
                 line.Stroke = newBr;
             } else
             {
