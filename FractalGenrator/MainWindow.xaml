@@ -7,13 +7,21 @@
         xmlns:hw="http://schemas.hpod9.com/haley/wpf"
         xmlns:hm="http://schemas.hpod9.com/haley/mvvm"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="475" Width="800" MinHeight="475" MinWidth="800">
     <Grid>
         <DockPanel Background="AntiqueWhite">
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="Depth" Click="Depth_Click" x:Name="depthButton"/>
-                <MenuItem Header="Angle" Click="Angle_Click"/>
-                <MenuItem Header="Length Between"/>
+                <MenuItem Header="Settings">
+                    <MenuItem Header="Angle" Click="Angle_Click"/>
+                    <MenuItem Header="Length Between" Click="Length_Click"/>
+                    <MenuItem Header="Frames"/>
+                </MenuItem>
+                <MenuItem Header="Window Size">
+                    <MenuItem Header="Minimum" Click="Minimum_Click"/>
+                    <MenuItem Header="Medium" Click="Medium_Click"/>
+                    <MenuItem Header="Maximum" Click="Maximum_Click"/>
+                </MenuItem>
                 <MenuItem Header="Save to PNG" Click="Save_Click" x:Name="saveButton"/>
                 <MenuItem Header="Gradient" x:Name="mnuActions" IsCheckable="true" Click="Gradient_Click"/>
                 <TextBlock Name="tbLabel" IsEnabled="False"/>
@@ -24,10 +32,10 @@
                 <Button Background="White" Content="Line" Click="btnLine_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
                 <Button Background="White" Content="Carpet" Click="btnCarpet_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
                 <Button Background="White" Content="Triangle" Click="btnTriangle_Click" Width="100" Height="30" VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="10"/>
-                <hw:ColorPickerButton  Width="100" Height="30" Margin="10" Content="Start Color" x:Name="startColor"/>
-                <hw:ColorPickerButton  Width="100" Height="30" Margin="10" Content="End Color" x:Name="endColor"/>
+                <hw:ColorPickerButton  Width="100" Height="30" Margin="5" Content="Start Color" x:Name="startColor"/>
+                <hw:ColorPickerButton  Width="100" Height="30" Margin="5" Content="End Color" x:Name="endColor"/>
                 <TextBlock x:Name="zoomLabel"/>
-                <Slider x:Name="sliderZoom" Minimum="1" Maximum="25" ValueChanged="ZoomSlider_OnValueChanged"></Slider>
+                <Slider x:Name="sliderZoom" Minimum="1" Maximum="5" Width="125" ValueChanged="ZoomSlider_OnValueChanged"></Slider>
             </StackPanel>
 
 

@@ -17,11 +17,21 @@ namespace FractalGenrator
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class LengthWindow : Window
     {
-        public Window1()
+        public LengthWindow()
         {
             InitializeComponent();
+        }
+
+        private void AcceptLength_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+        }
+
+        public string LengthText
+        {
+            get { return lengthFractalBox.Text; }
         }
     }
 }

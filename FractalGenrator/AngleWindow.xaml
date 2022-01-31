@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FractalGenrator"
         mc:Ignorable="d"
-        Title="Window1" Height="200" Width="300">
+        Title="Window1" Height="225" Width="300" MinHeight="225" MinWidth="300" MaxHeight="300" MaxWidth="300">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />

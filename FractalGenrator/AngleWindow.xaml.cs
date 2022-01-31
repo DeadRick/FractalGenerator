@@ -38,7 +38,6 @@ namespace FractalGenrator
             this.DialogResult = false;
            
         }
-
         private void slider2_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             rightLabel.Text = $"Right: {(int)slider2.Value}";

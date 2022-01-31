@@ -16,7 +16,7 @@ using Fractal;
 namespace FractalGenrator
 {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Interaction logic for DepthWindow.xaml
     /// </summary>
     public partial class DepthWindow : Window
     {

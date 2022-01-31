@@ -36,26 +36,25 @@ namespace FractalGenrator
 
         //private Delegate LastMethod;
 
+        double widthWindow = System.Windows.SystemParameters.PrimaryScreenWidth;
+        double heightWindow = System.Windows.SystemParameters.PrimaryScreenHeight;
+
         static SolidColorBrush startGrad;
         static SolidColorBrush endGrad;
 
+        int SelectedZoom;
         IEnumerable<Color> gradient;
         static Polyline pl = new();
         static Polygon pol = new();
-        bool flagTree = false;
-        bool flagFlake = false;
-        bool flagLine = false;
-        bool flagCarpet = false;
-        bool flagTriangle = false;
-        bool saveCheck = false;
-        bool gradientCheck = false;
+        bool flagTree, flagFlake, flagLine, flagCarpet, flagTriangle, saveCheck, gradientCheck = false;
         public bool angleCheck = false;
-        private static double angleL;
-        private static double angleR;
+        private static double angleL, angleR;
         private double SnowflakeSize;
         private static int depth = 10;
         private int cntDepth = 0;
         private int frames = 0;
+        private int fps = 30;
+        private int lengthBetween = 20;
         double[] dTheta = new double[4] { 0, Math.PI / 3, -2 * Math.PI / 3, Math.PI / 3 };
 
         public MainWindow()
@@ -63,6 +62,10 @@ namespace FractalGenrator
             InitializeComponent();
             Width = System.Windows.SystemParameters.PrimaryScreenWidth / 2;
             Height = (System.Windows.SystemParameters.PrimaryScreenHeight / 2) + 10;
+            MinWidth = widthWindow / 2;
+            MinHeight = heightWindow / 2;
+            MaxWidth = Width;
+            MaxHeight = Height;
             Title = "Fractals";
 
             startColor.SelectedBrush = Brushes.Brown;
@@ -87,7 +90,6 @@ namespace FractalGenrator
             pl.Stroke = Brushes.Black;
         }
 
-        int SelectedZoom;
 
         private void ZoomSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -136,7 +138,8 @@ namespace FractalGenrator
             if (gradientCheck == false)
             {
                 gradientCheck = true;
-            } else
+            }
+            else
             {
                 gradientCheck = false;
             }
@@ -144,6 +147,7 @@ namespace FractalGenrator
         private void btnTriangle_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagTriangle, 5);
+            if (depth > 10) { depth = 10; }
             flagTriangle = false;
             Title = triangle.Name;
             CompositionTarget.Rendering += StartAnimationTriangle;
@@ -151,6 +155,7 @@ namespace FractalGenrator
         private void btnCarpet_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagCarpet, 4);
+            if (depth > 8) { depth = 7; }
             flagCarpet = true;
             Title = carpet.Name;
             CompositionTarget.Rendering += StartAnimationCarpet;
@@ -158,6 +163,7 @@ namespace FractalGenrator
         private void btnLine_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagLine, 3);
+            if (depth > 10) { depth = 10; }
             flagLine = true;
             Title = line.Name;
             CompositionTarget.Rendering += StartAnimationLine;
@@ -165,6 +171,7 @@ namespace FractalGenrator
         private void btnFlake_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagFlake, 2);
+            if (depth > 10) { depth = 10; }
             flagFlake = true;
             Title = flake.Name;
             canvas1.Children.Add(pl);
@@ -174,6 +181,7 @@ namespace FractalGenrator
         private void btnTree_Click(object sender, RoutedEventArgs e)
         {
             ClickSettings(flagTree, 1);
+            if (depth > 15) { depth = 15; }
             gradient = GetGradients(endColor.SelectedBrush.Color, startColor.SelectedBrush.Color, depth);
             flagTree = true;
             Title = tree.Name;
@@ -201,6 +209,25 @@ namespace FractalGenrator
                 }
             }
             else MessageBox.Show("There is nothing to save!");
+        }
+
+        private void Length_Click(object sender, RoutedEventArgs e)
+        {
+            LengthWindow lenWindow = new();
+            if (lenWindow.ShowDialog() == true)
+            {
+                if (int.TryParse(lenWindow.LengthText, out int lengthBet) || (lengthBetween > 0) || (lengthBetween < 51))
+                {
+                    lengthBetween = lengthBet;
+                } else
+                {
+                    MessageBox.Show("Incorrect input for length! (From 1 to 50)");
+                    lenWindow.Close();
+                }
+            } else
+            {
+                lengthBetween = 20;
+            }
         }
 
         private void Angle_Click(object sender, RoutedEventArgs e)
@@ -242,12 +269,12 @@ namespace FractalGenrator
             {
                 if (depthWindow.ShowDialog() == true)
                 {
-                    if (int.TryParse(depthWindow.DepthText, out int depthFromWindow) && (depthFromWindow >= 1) && (depthFromWindow <= 20))
+                    if (int.TryParse(depthWindow.DepthText, out int depthFromWindow) && (depthFromWindow >= 1) && (depthFromWindow <= 16))
                     {
                         depth = depthFromWindow;
                         cntDepth = 1;
-                        
-                        
+
+
                         MessageBox.Show("Depth was succesfully changed");
                         if (lastFractal.Count != 0)
                         {
@@ -277,13 +304,12 @@ namespace FractalGenrator
                                 case 5:
                                     CompositionTarget.Rendering += StartAnimationTriangle;
                                     break;
-                               
                             }
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Incorrect input for depth! (From 1 to 20)");
+                        MessageBox.Show("Incorrect input for depth! (From 1 to 16)");
                     }
                 }
                 else
@@ -338,7 +364,7 @@ namespace FractalGenrator
             frames += 1;
             if (frames % 30 == 0)
             {
-                line.DrawLine(canvas1, cntDepth, new Point(0, 0), 2, canvas1.Width, 20, gradient, gradientCheck);
+                line.DrawLine(canvas1, cntDepth, new Point(0, 0), canvas1.Width, lengthBetween, gradient, gradientCheck);
 
                 string str = $"{line.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
@@ -428,6 +454,66 @@ namespace FractalGenrator
             CompositionTarget.Rendering -= StartAnimationLine;
             CompositionTarget.Rendering -= StartAnimationTree;
             CompositionTarget.Rendering -= StartAnimationFlake;
+        }
+        private void DrawTheLastFractal()
+        {
+            if (lastFractal.Count != 0)
+            {
+                canvas1.Children.Clear();
+                switch (lastFractal.Last.Value)
+                {
+                    case 1:
+                        tree.DrawBinaryTree(canvas1, depth, new Point(canvas1.Width / 2, canvas1.Height * 0.77), 0.2 * canvas1.Width, 3 * Math.PI / 2, angleCheck, gradient, gradientCheck, 2, angleL, angleR);
+                        break;
+                    case 2:
+                        flake.DrawSnowFlake(canvas1, SnowflakeSize, depth, gradient, gradientCheck);
+                        break;
+                    case 3:
+                        line.DrawLine(canvas1, depth, new Point(0, 0), canvas1.Width, lengthBetween, gradient, gradientCheck);
+                        break;
+                    case 4:
+                        carpet.DrawCarpet(canvas1, depth, pol, 0, gradient, gradientCheck);
+                        break;
+                    case 5:
+                        triangle.DrawTriangle(canvas1, depth, pol, 0, gradient, gradientCheck);
+                        break;
+                }
+            }
+        }
+        private void WindowChanging()
+        {
+            Width = MinWidth;
+            Height = MinHeight;
+            MaxWidth = Width;
+            MaxHeight = Height;
+            canvas1.Height = canvas1.Width;
+            if (!(flagFlake || flagTree || flagLine || flagCarpet || flagTriangle))
+            {
+                DrawTheLastFractal();
+            }
+        }
+        private void Maximum_Click(object sender, RoutedEventArgs e)
+        {
+            MinWidth = widthWindow;
+            MinHeight = heightWindow - 20;
+            canvas1.Width = heightWindow;
+            WindowChanging();
+        }
+
+        private void Medium_Click(object sender, RoutedEventArgs e)
+        {
+            MinWidth = widthWindow / 2 + heightWindow / 4;
+            MinHeight = heightWindow / 2 + heightWindow / 4;
+            canvas1.Width = heightWindow / 2 + heightWindow / 4;
+            WindowChanging();
+        }
+
+        private void Minimum_Click(object sender, RoutedEventArgs e)
+        {
+            MinWidth = widthWindow / 2;
+            MinHeight = heightWindow / 2;
+            canvas1.Width = heightWindow / 2;
+            WindowChanging();
         }
     }
 }

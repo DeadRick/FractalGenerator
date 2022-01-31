@@ -24,7 +24,7 @@ namespace FractalGenrator
             Name = name;
         }
 
-        public void DrawLine(Canvas canvas, int cntDepth, Point pt, double pixelBetween, double lineLength, double lengthTo, IEnumerable<Color> colors, bool gradCheck)
+        public void DrawLine(Canvas canvas, int cntDepth, Point pt, double lineLength, double lengthTo, IEnumerable<Color> colors, bool gradCheck)
         {
             
             double x1 = pt.X;
@@ -53,8 +53,8 @@ namespace FractalGenrator
 
             if (cntDepth > 1 && lineLength > 0.001)
             {
-                DrawLine(canvas, cntDepth - 1, new Point(x1, y1), pixelBetween, lineLength / 3, lengthTo, colors, gradCheck);
-                DrawLine(canvas, cntDepth - 1, new Point(x1 + (lineLength / 3) * 2 , y1), pixelBetween, lineLength / 3, lengthTo, colors, gradCheck);
+                DrawLine(canvas, cntDepth - 1, new Point(x1, y1), lineLength / 3, lengthTo, colors, gradCheck);
+                DrawLine(canvas, cntDepth - 1, new Point(x1 + (lineLength / 3) * 2 , y1), lineLength / 3, lengthTo, colors, gradCheck);
             }
             else return;
         }

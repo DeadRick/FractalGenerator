@@ -38,7 +38,7 @@ namespace FractalGenrator
                 pol.Fill = newBr;
             } else
             {
-                pol.Fill = Brushes.White;
+                pol.Fill = Brushes.AntiqueWhite;
             }
             Point point00 = new Point(x0, y0);
             Point point01 = new Point(x0 + width, y0);
@@ -98,7 +98,6 @@ namespace FractalGenrator
                     double y1 = y0 + height;
                     double y2 = y0 + height * 2d;
 
-
                     Polygon pol0_0 = FillPoly(x0, width, y0, height, clrs, iteration, gradCheck);
                     Polygon pol1_0 = FillPoly(x1, width, y0, height, clrs, iteration, gradCheck);
                     Polygon pol2_0 = FillPoly(x2, width, y0, height, clrs, iteration, gradCheck);
@@ -119,8 +118,6 @@ namespace FractalGenrator
                     DrawCarpet(canvas, depth, pol0_2, iteration + 1, colors, gradCheck);
                     DrawCarpet(canvas, depth, pol1_2, iteration + 1, colors, gradCheck);
                     DrawCarpet(canvas, depth, pol2_2, iteration + 1, colors, gradCheck);
-
-
                 }
                 else
                 {
