@@ -15,7 +15,7 @@
                 <MenuItem Header="Settings">
                     <MenuItem Header="Angle" Click="Angle_Click"/>
                     <MenuItem Header="Length Between" Click="Length_Click"/>
-                    <MenuItem Header="Frames"/>
+                    <MenuItem Header="Frames" Click="Frame_Click"/>
                 </MenuItem>
                 <MenuItem Header="Window Size">
                     <MenuItem Header="Minimum" Click="Minimum_Click"/>

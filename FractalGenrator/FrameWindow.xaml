@@ -1,11 +1,11 @@
-﻿<Window x:Class="FractalGenrator.LengthWindow"
+﻿<Window x:Class="FractalGenrator.FrameWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FractalGenrator"
         mc:Ignorable="d"
-        Title="Length Window" Height="150" Width="250" MinHeight="150" MinWidth="250" MaxHeight="150" MaxWidth="250">
+        Title="FrameWindow" Height="150" Width="250" MinHeight="150" MinWidth="250" MaxHeight="150" MaxWidth="250">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -13,11 +13,10 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock>Length between lines:</TextBlock>
-        <TextBox Name="lengthFractalBox" Grid.Row="1" MinWidth="200">20</TextBox>
-
+        <TextBlock>Frames:</TextBlock>
+        <TextBox Name="frameCount" Grid.Row="1" MinWidth="200">30</TextBox>
         <WrapPanel Grid.Row="2" HorizontalAlignment="Right" Margin="0,15,0,0">
-            <Button IsDefault="True" Click="AcceptLength_Click" MinWidth="60" Margin="0,0,10,0">OK</Button>
+            <Button IsDefault="True" Click="AcceptFrame_Click" MinWidth="60" Margin="0,0,10,0">OK</Button>
             <Button IsCancel="True" MinWidth="60">Cancel</Button>
         </WrapPanel>
     </Grid>

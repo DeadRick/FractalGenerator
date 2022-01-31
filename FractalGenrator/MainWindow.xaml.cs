@@ -24,30 +24,38 @@ namespace FractalGenrator
     /// </summary>
     public partial class MainWindow : Window
     {
+        // Создание всех фракталов.
         Line line = new("Line");
         Flake flake = new("Flake", ref pl);
         BinaryTree tree = new("Binary Tree");
-        Carpet carpet = new("Carpet", depth);
+        Carpet carpet = new("Carpet");
         Triangle triangle = new("Triangle");
 
+        // Приближение фрактала.
         ScaleTransform transformScale = new();
 
+        // Последний нажатый фрактал.
         LinkedList<int> lastFractal = new();
 
-        //private Delegate LastMethod;
-
+        // Настройки монитора.
         double widthWindow = System.Windows.SystemParameters.PrimaryScreenWidth;
         double heightWindow = System.Windows.SystemParameters.PrimaryScreenHeight;
 
+        // Начальный и конечный цвет градиента.
+        IEnumerable<Color> gradient;
         static SolidColorBrush startGrad;
         static SolidColorBrush endGrad;
 
+        // Вспомогательные переменные.
         int SelectedZoom;
-        IEnumerable<Color> gradient;
         static Polyline pl = new();
         static Polygon pol = new();
+
+        // Флажки для проверки состояния рендеринга.
         bool flagTree, flagFlake, flagLine, flagCarpet, flagTriangle, saveCheck, gradientCheck = false;
         public bool angleCheck = false;
+
+        // Левая и правая ветвь дерева.
         private static double angleL, angleR;
         private double SnowflakeSize;
         private static int depth = 10;
@@ -55,30 +63,40 @@ namespace FractalGenrator
         private int frames = 0;
         private int fps = 30;
         private int lengthBetween = 20;
+
+        // Углы для снежинки (кривой Коха).
         double[] dTheta = new double[4] { 0, Math.PI / 3, -2 * Math.PI / 3, Math.PI / 3 };
 
+
+        /// <summary>
+        /// Инициализация компонентов.
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
+
+            // Фиксация размеров окна.
             Width = System.Windows.SystemParameters.PrimaryScreenWidth / 2;
             Height = (System.Windows.SystemParameters.PrimaryScreenHeight / 2) + 10;
             MinWidth = widthWindow / 2;
             MinHeight = heightWindow / 2;
             MaxWidth = Width;
             MaxHeight = Height;
+
             Title = "Fractals";
 
+            // Установка начальных цветов градиента.
             startColor.SelectedBrush = Brushes.Brown;
             endColor.SelectedBrush = Brushes.Green;
-
             startGrad = startColor.SelectedBrush;
             endGrad = endColor.SelectedBrush;
-
             gradient = GetGradients(startGrad.Color, endGrad.Color, depth);
 
+            // Инициализация приближения.
             canvas1.LayoutTransform = transformScale;
             canvas1.Width = canvas1.Height;
 
+            // Инициализация размера снежинки (кривой Коха).
             double ysize = 0.8 * canvas1.Height / (Math.Sqrt(3) * 4 / 3);
             double xsize = 0.8 * canvas1.Width / 2;
             double size = 0;
@@ -89,8 +107,11 @@ namespace FractalGenrator
             SnowflakeSize = 2 * size;
             pl.Stroke = Brushes.Black;
         }
-
-
+        /// <summary>
+        /// Приближение фрактала.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ZoomSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             SelectedZoom = (int)sliderZoom.Value;
@@ -98,12 +119,21 @@ namespace FractalGenrator
             transformScale.ScaleY = SelectedZoom;
             zoomLabel.Text = $"Zoom: {(int)sliderZoom.Value}";
         }
+
+        /// <summary>
+        /// Получение списка цветов из градиента.
+        /// </summary>
+        /// <param name="start"> Начальный цвет </param>
+        /// <param name="end"> Конечный цвет </param>
+        /// <param name="steps"> Число итераций </param>
+        /// <returns></returns>
         public static IEnumerable<Color> GetGradients(Color start, Color end, int steps)
         {
-            if (steps == 1)
-            {
-                steps += 2;
-            }
+            // Т.к. у некоторых методов рекурсия идёт в минус, при глубине 1, массив может выходить за рамки.
+            // Минимальный размер массива 3.
+            if (steps == 1) { steps += 2; }
+
+            // Цвета на промежуточных итераций.
             int stepA = ((end.A - start.A) / (steps - 1));
             int stepR = ((end.R - start.R) / (steps - 1));
             int stepG = ((end.G - start.G) / (steps - 1));
@@ -118,10 +148,11 @@ namespace FractalGenrator
             }
         }
 
-
-        // Buttons
-
-        private void ClickSettings(bool flagCheck, int fractal)
+        /// <summary>
+        /// Начальные значения для отрисовки любого фрактала.
+        /// </summary>
+        /// <param name="fractal"></param>
+        private void ClickSettings(int fractal)
         {
             UnfollowAll();
             saveCheck = true;
@@ -133,71 +164,132 @@ namespace FractalGenrator
             cntDepth = 1;
         }
 
+
+        /*--------------------------------------------------------------*/
+        // ------------------------ Кнопки -----------------------------// 
+        /*--------------------------------------------------------------*/
+
+        /// <summary>
+        /// Чеккер для градиента.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Gradient_Click(object sender, RoutedEventArgs e)
         {
-            if (gradientCheck == false)
-            {
-                gradientCheck = true;
-            }
-            else
-            {
-                gradientCheck = false;
-            }
+            if (gradientCheck == false) { gradientCheck = true; }
+            else { gradientCheck = false; }
         }
+
+        /// <summary>
+        /// Кнопка отрисовки Треугольника. Номер фрактала - 5.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnTriangle_Click(object sender, RoutedEventArgs e)
         {
-            ClickSettings(flagTriangle, 5);
+            ClickSettings(5);
+
+            // Максимальная глубина для треугольника - 10.
             if (depth > 10) { depth = 10; }
             flagTriangle = false;
             Title = triangle.Name;
+
+            // Подписка анимации треугольна на рендеринг.
             CompositionTarget.Rendering += StartAnimationTriangle;
         }
+        
+        /// <summary>
+        /// Кнопка отрисовки Ковра Серпинского. Номер фрактала - 4.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnCarpet_Click(object sender, RoutedEventArgs e)
         {
-            ClickSettings(flagCarpet, 4);
-            if (depth > 8) { depth = 7; }
+            ClickSettings(4);
+
+            // Максимальная глубина для ковра - 7.
+            if (depth > 7) { depth = 7; }
             flagCarpet = true;
             Title = carpet.Name;
+            
+            // Подписка анимации коврика на рендеринг.
             CompositionTarget.Rendering += StartAnimationCarpet;
         }
+
+        /// <summary>
+        /// Кнопка отрисовки линии. Номер фрактала - 3.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnLine_Click(object sender, RoutedEventArgs e)
         {
-            ClickSettings(flagLine, 3);
+            ClickSettings(3);
+
+            // Максимальная глубина для линии - 10.
             if (depth > 10) { depth = 10; }
-            flagLine = true;
+            flagLine = true; 
             Title = line.Name;
+
+            // Подписка анимации линии на рендеринг.
             CompositionTarget.Rendering += StartAnimationLine;
         }
+
+        /// <summary>
+        /// Кнопка отрисовки снежинки. Номер фрактала - 2.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnFlake_Click(object sender, RoutedEventArgs e)
         {
-            ClickSettings(flagFlake, 2);
+            ClickSettings(2);
+
+            // Максимальная глубина для снежинки (кривая Коха).
             if (depth > 10) { depth = 10; }
             flagFlake = true;
             Title = flake.Name;
             canvas1.Children.Add(pl);
+
+            // Подписка анимации снежинки Коха на рендеринг.
             CompositionTarget.Rendering += StartAnimationFlake;
         }
 
+        /// <summary>
+        /// Кнопка отрисовки бинарного дерева. Номер фрактала - 1.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnTree_Click(object sender, RoutedEventArgs e)
         {
-            ClickSettings(flagTree, 1);
+            ClickSettings(1);
+
+            // Максимальная глубина для бинарного дерева.
             if (depth > 15) { depth = 15; }
             gradient = GetGradients(endColor.SelectedBrush.Color, startColor.SelectedBrush.Color, depth);
             flagTree = true;
             Title = tree.Name;
+
+            // Подписка анимации бинарного дерева на рендеринг.
             CompositionTarget.Rendering += StartAnimationTree;
         }
 
+        /// <summary>
+        /// Кнопка сохранения картинки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Save_Click(object sender, RoutedEventArgs e)
         {
+            // Ожидание окончания отрисовки.
             if (saveCheck)
             {
+                // Всё еще окночание отрисовки.
                 if (flagTree || flagFlake || flagLine || flagCarpet || flagTriangle)
                 {
                     MessageBox.Show("Please, wait the end of rendering.");
                 }
                 else
                 {
+                    // Диалоговое окно выбора директории.
                     CommonOpenFileDialog dialog = new CommonOpenFileDialog();
                     string path;
                     dialog.IsFolderPicker = true;
@@ -210,36 +302,79 @@ namespace FractalGenrator
             }
             else MessageBox.Show("There is nothing to save!");
         }
-
+        
+        /// <summary>
+        /// Кнопка выбора длины между линиями (только для фрактала линии).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Length_Click(object sender, RoutedEventArgs e)
         {
+            // Создание окна ввода длины.
             LengthWindow lenWindow = new();
             if (lenWindow.ShowDialog() == true)
             {
+                // Проверка корректности данных на допустимые значения. Для длины это от 1 до 50.
                 if (int.TryParse(lenWindow.LengthText, out int lengthBet) || (lengthBetween > 0) || (lengthBetween < 51))
                 {
                     lengthBetween = lengthBet;
-                } else
+                }
+                else
                 {
                     MessageBox.Show("Incorrect input for length! (From 1 to 50)");
                     lenWindow.Close();
                 }
-            } else
+            }
+            else
             {
+                // Установка изначального значения в 20 пикселей.
                 lengthBetween = 20;
             }
         }
 
+        /// <summary>
+        /// Кнопка выбора кадров.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Frame_Click(object sender, RoutedEventArgs e)
+        {
+            // Создание окна выбора кадров.
+            FrameWindow frameWindow = new();
+
+            if (frameWindow.ShowDialog() == true)
+            {
+                // Проверка корректности вводимых значений. (от 1 до 99 кадров).
+                if (int.TryParse(frameWindow.frameText, out int FPS) || (lengthBetween > 0) || (lengthBetween < 100))
+                {
+                    fps = FPS;
+                }
+                else
+                {
+                    MessageBox.Show("Incorrect input for framse! (From 1 to 100)");
+                    frameWindow.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Кнопка выбора углов для дерева.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Angle_Click(object sender, RoutedEventArgs e)
         {
             if (flagTree == false)
             {
+                // Создание нового окна выбора двух углов.
                 AngleWindow angleWindow = new();
 
                 if (angleWindow.ShowDialog() == true)
                 {
+                    // Задаем значение для левой и правой ветви дерева.
                     angleL = angleWindow.slider1.Value;
                     angleR = angleWindow.slider2.Value;
+
                     angleCheck = true;
                     MessageBox.Show("Angle of Binary Tree was changed!");
                     angleWindow.Close();
@@ -256,8 +391,15 @@ namespace FractalGenrator
                 MessageBox.Show("Wait the end of rendering.");
             }
         }
+
+        /// <summary>
+        /// Кнопка выбора глубины рекурсии.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Depth_Click(object sender, RoutedEventArgs e)
         {
+            // Создание окна для выбора глубины рекурсии.
             DepthWindow depthWindow = new(depth);
 
             if (flagFlake || flagTree || flagLine || flagCarpet || flagTriangle)
@@ -276,31 +418,43 @@ namespace FractalGenrator
 
 
                         MessageBox.Show("Depth was succesfully changed");
+
+                        // Проверка связанного списка на последний элемент. 
                         if (lastFractal.Count != 0)
                         {
+                            // Очистка канваса для последующей отрисовки последнего выбраного фрактала.
                             canvas1.Children.Clear();
+                            // Если последний элемент - дерево. Меняем местами начальный цвет и конечный.
+                            // Так как у дерева, начальный элемент - это ветки, а нужно наоборот.
                             if (lastFractal.Last.Value == 1)
                             {
-                                gradient = GetGradients(endColor.SelectedBrush.Color, startColor.SelectedBrush.Color, depthFromWindow);
+                                gradient = GetGradients(endColor.SelectedBrush.Color, startColor.SelectedBrush.Color,
+                                    depthFromWindow);
                             }
                             else
                             {
-                                gradient = GetGradients(startColor.SelectedBrush.Color, endColor.SelectedBrush.Color, depthFromWindow);
+                                gradient = GetGradients(startColor.SelectedBrush.Color, endColor.SelectedBrush.Color,
+                                    depthFromWindow);
                             }
                             switch (lastFractal.Last.Value)
                             {
+                                // Дерево.
                                 case 1:
                                     CompositionTarget.Rendering += StartAnimationTree;
                                     break;
+                                // Снежинка Коха.
                                 case 2:
                                     CompositionTarget.Rendering += StartAnimationFlake;
                                     break;
+                                // Линия.
                                 case 3:
                                     CompositionTarget.Rendering += StartAnimationLine;
                                     break;
+                                // Ковёр Серпинского.
                                 case 4:
                                     CompositionTarget.Rendering += StartAnimationCarpet;
                                     break;
+                               // Треугольник.
                                 case 5:
                                     CompositionTarget.Rendering += StartAnimationTriangle;
                                     break;
@@ -320,49 +474,119 @@ namespace FractalGenrator
             }
         }
 
+        /// <summary>
+        /// Максимальный размер окна.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Maximum_Click(object sender, RoutedEventArgs e)
+        {
+            canvas1.Children.Clear();
+            MinWidth = widthWindow;
+            MinHeight = heightWindow - 20;
+            canvas1.Width = heightWindow;
+            WindowChanging();
+        }
 
-        // Start Animation section
+        /// <summary>
+        /// Средний размер окна.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Medium_Click(object sender, RoutedEventArgs e)
+        {
+            canvas1.Children.Clear();
+            MinWidth = widthWindow / 2 + heightWindow / 4;
+            MinHeight = heightWindow / 2 + heightWindow / 4;
+            canvas1.Width = heightWindow / 2 + heightWindow / 4;
+            WindowChanging();
+        }
 
+        /// <summary>
+        /// Минимальный рзамер окна.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Minimum_Click(object sender, RoutedEventArgs e)
+        {
+            canvas1.Children.Clear();
+            MinWidth = widthWindow / 2;
+            MinHeight = heightWindow / 2;
+            canvas1.Width = heightWindow / 2;
+            WindowChanging();
+        }
+
+        /*--------------------------------------------------------------------------------*/
+        // ------------------------ Начало Анимации Фрактала -----------------------------// 
+        /*--------------------------------------------------------------------------------*/
+
+
+        /// <summary>
+        /// Анимация треугольника.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartAnimationTriangle(object sender, EventArgs e)
         {
+            // Кадры. Начальное кол-во кадров = 20. То есть каждый 20й кадр срабатывает отрисовка.
             frames += 1;
-            if (frames % 30 == 0)
+            if (frames % fps == 0)
             {
+                // Отрисовка треугольника.
                 triangle.DrawTriangle(canvas1, cntDepth, pol, 0, gradient, gradientCheck);
+                
                 string str = $"{triangle.Name}. Depth = {cntDepth}.";
                 tbLabel.Text = str;
                 cntDepth += 1;
+
                 if (cntDepth > depth)
                 {
                     tbLabel.Text = $"{triangle.Name}. Depth = {depth}. Finished";
+                    // Отписываем все флаги, чтобы можно было менять глубину рекурсии.
+                    // Также отписываем от рендеринга.
                     Permission();
                     CompositionTarget.Rendering -= StartAnimationTriangle;
                 }
             }
         }
-
+        
+        /// <summary>
+        /// Анимация ковра.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartAnimationCarpet(object sender, EventArgs e)
         {
+            // Кадры. Начальное кол-во кадров = 20. То есть каждый 20й кадр срабатывает отрисовка.
             frames += 1;
-
-            if (frames % 30 == 0)
+            if (frames % fps == 0)
             {
+                // Отрисовка ковра Серпинского.
                 carpet.DrawCarpet(canvas1, cntDepth, pol, 0, gradient, gradientCheck);
+
                 string str = $"{carpet.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
                 cntDepth += 1;
+
                 if (cntDepth > depth)
                 {
                     tbLabel.Text = $"{carpet.Name}. Depth = {depth}. Finished";
+                    // Отписка от всего.
                     Permission();
                     CompositionTarget.Rendering -= StartAnimationCarpet;
                 }
             }
         }
+
+        /// <summary>
+        /// Анимация линии.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartAnimationLine(object sender, EventArgs e)
         {
             frames += 1;
-            if (frames % 30 == 0)
+            if (frames % fps == 0)
             {
                 line.DrawLine(canvas1, cntDepth, new Point(0, 0), canvas1.Width, lengthBetween, gradient, gradientCheck);
 
@@ -377,12 +601,19 @@ namespace FractalGenrator
                 }
             }
         }
+
+        /// <summary>
+        /// Анимация дерева.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartAnimationTree(object sender, EventArgs e)
         {
             frames += 1;
-            if (frames % 20 == 0)
+            if (frames % fps == 0)
             {
-                tree.DrawBinaryTree(canvas1, cntDepth, new Point(canvas1.Width / 2, canvas1.Height * 0.77), 0.2 * canvas1.Width, 3 * Math.PI / 2, angleCheck, gradient, gradientCheck, 2, angleL, angleR);
+                tree.DrawBinaryTree(canvas1, cntDepth, new Point(canvas1.Width / 2, canvas1.Height * 0.77),
+                    0.2 * canvas1.Width, 3 * Math.PI / 2, angleCheck, gradient, gradientCheck, 2, angleL, angleR);
                 string str = $"{tree.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
                 cntDepth += 1;
@@ -395,10 +626,15 @@ namespace FractalGenrator
             }
         }
 
+        /// <summary>
+        /// Анимация кривой Кохи (снежинки).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartAnimationFlake(object sender, EventArgs e)
         {
             frames += 1;
-            if (frames % 20 == 0)
+            if (frames % fps == 0)
             {
                 pl.Points.Clear();
                 flake.DrawSnowFlake(canvas1, SnowflakeSize, cntDepth, gradient, gradientCheck);
@@ -415,16 +651,36 @@ namespace FractalGenrator
             }
         }
 
+        /*--------------------------------------------------------------------------------*/
+        // ------------------------ Сохранение Canvas в PNG ------------------------------// 
+        /*--------------------------------------------------------------------------------*/
+
+        /// <summary>
+        /// Создание BitMap и последующая передача для сохранения.
+        /// </summary>
+        /// <param name="canvas">Канвас</param>
+        /// <param name="dpi">DPI</param>
+        /// <param name="filename">Путь.</param>
         public static void SaveCanvasToFile(Canvas canvas, int dpi, string filename)
         {
+            // Сохранение картинки размером 5000x5000
             var renderTarget = new RenderTargetBitmap(5000, 5000, dpi, dpi, PixelFormats.Pbgra32);
             renderTarget.Render(canvas);
+
+            // Передача полученных данных в метод обработки для создания картинки.
             SaveRTBAsPNGBMP(renderTarget, filename);
         }
+
+        /// <summary>
+        /// Обработка данных в картинку формата .png
+        /// </summary>
+        /// <param name="bmp">Данные канваса</param>
+        /// <param name="filename">Путь</param>
         private static void SaveRTBAsPNGBMP(RenderTargetBitmap bmp, string filename)
         {
             try
             {
+                // Сохраение канваса в .png
                 var enc = new PngBitmapEncoder();
                 enc.Frames.Add(BitmapFrame.Create(bmp));
                 using (var stm = System.IO.File.Create(filename))
@@ -439,6 +695,14 @@ namespace FractalGenrator
             }
         }
 
+
+        /*--------------------------------------------------------------------------------*/
+        // ------------------------ Вспомогательные Методы -------------------------------// 
+        /*--------------------------------------------------------------------------------*/
+        
+        /// <summary>
+        /// Отписка всех флагов для смены глубины рекурсии и возможности сохранять канвас в картинку.
+        /// </summary>
         private void Permission()
         {
             flagTree = false;
@@ -447,6 +711,13 @@ namespace FractalGenrator
             flagTriangle = false;
             flagCarpet = false;
         }
+
+        /// <summary>
+        /// Отписка от всех анимаций.
+        /// Если не использовать это, то при клике на фрактал,
+        /// флаг не успевает сработать, поэтому функция смена глубины фрактала
+        /// становится  невозможной.
+        /// </summary>
         private void UnfollowAll()
         {
             CompositionTarget.Rendering -= StartAnimationTriangle;
@@ -455,6 +726,11 @@ namespace FractalGenrator
             CompositionTarget.Rendering -= StartAnimationTree;
             CompositionTarget.Rendering -= StartAnimationFlake;
         }
+
+        /// <summary>
+        /// Отрисовка последнего фрактала.
+        /// Отрабатывает при изменении размера окна.
+        /// </summary>
         private void DrawTheLastFractal()
         {
             if (lastFractal.Count != 0)
@@ -480,6 +756,10 @@ namespace FractalGenrator
                 }
             }
         }
+
+        /// <summary>
+        /// Метод для смены размера окна.
+        /// </summary>
         private void WindowChanging()
         {
             Width = MinWidth;
@@ -487,33 +767,11 @@ namespace FractalGenrator
             MaxWidth = Width;
             MaxHeight = Height;
             canvas1.Height = canvas1.Width;
+            // Если не рендерится фрактал, тогда отрисовать его при новых значениях канваса.
             if (!(flagFlake || flagTree || flagLine || flagCarpet || flagTriangle))
             {
                 DrawTheLastFractal();
             }
-        }
-        private void Maximum_Click(object sender, RoutedEventArgs e)
-        {
-            MinWidth = widthWindow;
-            MinHeight = heightWindow - 20;
-            canvas1.Width = heightWindow;
-            WindowChanging();
-        }
-
-        private void Medium_Click(object sender, RoutedEventArgs e)
-        {
-            MinWidth = widthWindow / 2 + heightWindow / 4;
-            MinHeight = heightWindow / 2 + heightWindow / 4;
-            canvas1.Width = heightWindow / 2 + heightWindow / 4;
-            WindowChanging();
-        }
-
-        private void Minimum_Click(object sender, RoutedEventArgs e)
-        {
-            MinWidth = widthWindow / 2;
-            MinHeight = heightWindow / 2;
-            canvas1.Width = heightWindow / 2;
-            WindowChanging();
         }
     }
 }

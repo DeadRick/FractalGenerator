@@ -18,43 +18,66 @@ namespace FractalGenrator
     public partial class Flake : GeneralFractal
     {
         public override string Name { get; }
+
+        // Начальная точка для снежинки.
         private Point SnowflakePoint = new Point();
         Polyline pl = new Polyline();
+
+        // Углы для правильной сборки снежинки ( в треугольник ).
         double[] dAngles = new double[4] { 0, Math.PI / 3, -2 * Math.PI / 3, Math.PI / 3 };
+
+        // Коэффициент приближения.
         private double distanceScale = 1.0 / 3;
 
-
+        /// <summary>
+        /// В конструкторе название фрактала и также Polyline.
+        /// </summary>
+        /// <param name="name">Название</param>
+        /// <param name="Pline">Polyline</param>
         public Flake(string name, ref Polyline Pline) : base(name)
         {
             Name = name;
             pl = Pline;
         }
+
+        /// <summary>
+        /// Основная рекурсия для отрисовки снежинки.
+        /// </summary>
+        /// <param name="canvas">Канвас</param>
+        /// <param name="depth">Глубина рекурсии</param>
+        /// <param name="theta">Угл</param>
+        /// <param name="distance">Приближение</param>
         private void SnowFlakeEdge(Canvas canvas, int depth, double theta, double distance)
         {
             Point pt = new Point();
            
-
-            if ((depth <= 0) || (distance <= 1.0))
+            // Оптимизация отрисовки, если приближение меньше 0.5, то перестать отрисовывать.
+            if ((depth <= 0) || (distance <= 0.5))
             {
                 pt.X = SnowflakePoint.X + distance * Math.Cos(theta);
                 pt.Y = SnowflakePoint.Y + distance * Math.Sin(theta);
                 pl.Points.Add(pt);
-                
-                
-          
                 SnowflakePoint = pt;
                 return;
             }
+
+            // Перебор для всех сторон.
             distance *= distanceScale;
             for (int j = 0; j < 4; j++)
             {
-
                 theta += dAngles[j];
-  
                 SnowFlakeEdge(canvas, depth - 1, theta, distance);
             }
         }
         
+        /// <summary>
+        /// Начало отрисовки снежинки.
+        /// </summary>
+        /// <param name="canvas"></param>
+        /// <param name="length"></param>
+        /// <param name="depth"></param>
+        /// <param name="colors"></param>
+        /// <param name="gradCheck"></param>
         public void DrawSnowFlake(Canvas canvas, double length, int depth, IEnumerable<Color> colors, bool gradCheck)
         {
             double xmid = canvas.Width / 2;
