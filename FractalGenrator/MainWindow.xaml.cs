@@ -296,7 +296,7 @@ namespace FractalGenrator
                     if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
                     {
                         path = dialog.FileName + @"\fractal.png";
-                        SaveCanvasToFile(canvas1, 500, path);
+                        SaveCanvasToFile(canvas1, 759, path);
                     }
                 }
             }
@@ -463,7 +463,7 @@ namespace FractalGenrator
                     }
                     else
                     {
-                        MessageBox.Show("Incorrect input for depth! (From 1 to 16)");
+                        MessageBox.Show("Incorrect input for depth! (From 1 to 15)");
                     }
                 }
                 else
