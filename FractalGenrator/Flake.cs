@@ -73,21 +73,25 @@ namespace FractalGenrator
         /// <summary>
         /// Начало отрисовки снежинки.
         /// </summary>
-        /// <param name="canvas"></param>
-        /// <param name="length"></param>
-        /// <param name="depth"></param>
-        /// <param name="colors"></param>
-        /// <param name="gradCheck"></param>
+        /// <param name="canvas">Канвас</param>
+        /// <param name="length">Длина</param>
+        /// <param name="depth">Глубина рекурсии</param>
+        /// <param name="colors">Цвета градиента</param>
+        /// <param name="gradCheck">Проверка на градиент</param>
         public void DrawSnowFlake(Canvas canvas, double length, int depth, IEnumerable<Color> colors, bool gradCheck)
         {
+            // Получаем центр канваса. 
             double xmid = canvas.Width / 2;
             double ymid = canvas.Height / 2;
+
+            // Создание новых углов.
             Point[] pta = new Point[4];
             pta[0] = new Point(xmid, ymid + length / 2 * Math.Sqrt(3) * 2 / 3);
             pta[1] = new Point(xmid + length / 2, ymid - length / 2 * Math.Sqrt(3) / 3);
             pta[2] = new Point(xmid - length / 2, ymid - length / 2 * Math.Sqrt(3) / 3);
             pta[3] = pta[0];
 
+            // Перекрашивание в градиент.
             if (gradCheck)
             {
                 Color[] clrs = colors.ToArray();
@@ -99,7 +103,7 @@ namespace FractalGenrator
                 pl.Stroke = Brushes.Black;
             }
 
-
+            // Вход в рекурсии.
             pl.Points.Add(pta[0]);
             for (int j = 1; j < pta.Length; j++)
             {

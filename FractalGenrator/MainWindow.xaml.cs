@@ -43,8 +43,8 @@ namespace FractalGenrator
 
         // Начальный и конечный цвет градиента.
         IEnumerable<Color> gradient;
-        static SolidColorBrush startGrad;
-        static SolidColorBrush endGrad;
+        static SolidColorBrush s_startGrad;
+        static SolidColorBrush s_endGrad;
 
         // Вспомогательные переменные.
         int SelectedZoom;
@@ -56,9 +56,9 @@ namespace FractalGenrator
         public bool angleCheck = false;
 
         // Левая и правая ветвь дерева.
-        private static double angleL, angleR;
+        private static double s_angleL, s_angleR;
         private double SnowflakeSize;
-        private static int depth = 10;
+        private static int s_depth = 10;
         private int cntDepth = 0;
         private int frames = 0;
         private int fps = 30;
@@ -88,9 +88,9 @@ namespace FractalGenrator
             // Установка начальных цветов градиента.
             startColor.SelectedBrush = Brushes.Brown;
             endColor.SelectedBrush = Brushes.Green;
-            startGrad = startColor.SelectedBrush;
-            endGrad = endColor.SelectedBrush;
-            gradient = GetGradients(startGrad.Color, endGrad.Color, depth);
+            s_startGrad = startColor.SelectedBrush;
+            s_endGrad = endColor.SelectedBrush;
+            gradient = GetGradients(s_startGrad.Color, s_endGrad.Color, s_depth);
 
             // Инициализация приближения.
             canvas1.LayoutTransform = transformScale;
@@ -157,7 +157,7 @@ namespace FractalGenrator
             UnfollowAll();
             saveCheck = true;
             lastFractal.AddLast(fractal);
-            gradient = GetGradients(startColor.SelectedBrush.Color, endColor.SelectedBrush.Color, depth);
+            gradient = GetGradients(startColor.SelectedBrush.Color, endColor.SelectedBrush.Color, s_depth);
             canvas1.Children.Clear();
             tbLabel.Text = "";
             frames = 0;
@@ -190,7 +190,7 @@ namespace FractalGenrator
             ClickSettings(5);
 
             // Максимальная глубина для треугольника - 10.
-            if (depth > 10) { depth = 10; }
+            if (s_depth > 10) { s_depth = 10; }
             flagTriangle = false;
             Title = triangle.Name;
 
@@ -208,7 +208,7 @@ namespace FractalGenrator
             ClickSettings(4);
 
             // Максимальная глубина для ковра - 7.
-            if (depth > 7) { depth = 7; }
+            if (s_depth > 7) { s_depth = 7; }
             flagCarpet = true;
             Title = carpet.Name;
             
@@ -226,7 +226,7 @@ namespace FractalGenrator
             ClickSettings(3);
 
             // Максимальная глубина для линии - 10.
-            if (depth > 10) { depth = 10; }
+            if (s_depth > 10) { s_depth = 10; }
             flagLine = true; 
             Title = line.Name;
 
@@ -244,7 +244,7 @@ namespace FractalGenrator
             ClickSettings(2);
 
             // Максимальная глубина для снежинки (кривая Коха).
-            if (depth > 10) { depth = 10; }
+            if (s_depth > 10) { s_depth = 10; }
             flagFlake = true;
             Title = flake.Name;
             canvas1.Children.Add(pl);
@@ -263,8 +263,8 @@ namespace FractalGenrator
             ClickSettings(1);
 
             // Максимальная глубина для бинарного дерева.
-            if (depth > 15) { depth = 15; }
-            gradient = GetGradients(endColor.SelectedBrush.Color, startColor.SelectedBrush.Color, depth);
+            if (s_depth > 15) { s_depth = 15; }
+            gradient = GetGradients(endColor.SelectedBrush.Color, startColor.SelectedBrush.Color, s_depth);
             flagTree = true;
             Title = tree.Name;
 
@@ -372,8 +372,8 @@ namespace FractalGenrator
                 if (angleWindow.ShowDialog() == true)
                 {
                     // Задаем значение для левой и правой ветви дерева.
-                    angleL = angleWindow.slider1.Value;
-                    angleR = angleWindow.slider2.Value;
+                    s_angleL = angleWindow.slider1.Value;
+                    s_angleR = angleWindow.slider2.Value;
 
                     angleCheck = true;
                     MessageBox.Show("Angle of Binary Tree was changed!");
@@ -400,7 +400,7 @@ namespace FractalGenrator
         private void Depth_Click(object sender, RoutedEventArgs e)
         {
             // Создание окна для выбора глубины рекурсии.
-            DepthWindow depthWindow = new(depth);
+            DepthWindow depthWindow = new(s_depth);
 
             if (flagFlake || flagTree || flagLine || flagCarpet || flagTriangle)
             {
@@ -413,7 +413,7 @@ namespace FractalGenrator
                 {
                     if (int.TryParse(depthWindow.DepthText, out int depthFromWindow) && (depthFromWindow >= 1) && (depthFromWindow <= 16))
                     {
-                        depth = depthFromWindow;
+                        s_depth = depthFromWindow;
                         cntDepth = 1;
 
 
@@ -539,9 +539,9 @@ namespace FractalGenrator
                 tbLabel.Text = str;
                 cntDepth += 1;
 
-                if (cntDepth > depth)
+                if (cntDepth > s_depth)
                 {
-                    tbLabel.Text = $"{triangle.Name}. Depth = {depth}. Finished";
+                    tbLabel.Text = $"{triangle.Name}. Depth = {s_depth}. Finished";
                     // Отписываем все флаги, чтобы можно было менять глубину рекурсии.
                     // Также отписываем от рендеринга.
                     Permission();
@@ -568,9 +568,9 @@ namespace FractalGenrator
                 tbLabel.Text = str;
                 cntDepth += 1;
 
-                if (cntDepth > depth)
+                if (cntDepth > s_depth)
                 {
-                    tbLabel.Text = $"{carpet.Name}. Depth = {depth}. Finished";
+                    tbLabel.Text = $"{carpet.Name}. Depth = {s_depth}. Finished";
                     // Отписка от всего.
                     Permission();
                     CompositionTarget.Rendering -= StartAnimationCarpet;
@@ -593,9 +593,9 @@ namespace FractalGenrator
                 string str = $"{line.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
                 cntDepth += 1;
-                if (cntDepth > depth)
+                if (cntDepth > s_depth)
                 {
-                    tbLabel.Text = $"{line.Name}. Depth = {depth}. Finished";
+                    tbLabel.Text = $"{line.Name}. Depth = {s_depth}. Finished";
                     Permission();
                     CompositionTarget.Rendering -= StartAnimationLine;
                 }
@@ -613,13 +613,13 @@ namespace FractalGenrator
             if (frames % fps == 0)
             {
                 tree.DrawBinaryTree(canvas1, cntDepth, new Point(canvas1.Width / 2, canvas1.Height * 0.77),
-                    0.2 * canvas1.Width, 3 * Math.PI / 2, angleCheck, gradient, gradientCheck, 2, angleL, angleR);
+                    0.2 * canvas1.Width, 3 * Math.PI / 2, angleCheck, gradient, gradientCheck, 2, s_angleL, s_angleR);
                 string str = $"{tree.Name}. Depth = {cntDepth}";
                 tbLabel.Text = str;
                 cntDepth += 1;
-                if (cntDepth > depth)
+                if (cntDepth > s_depth)
                 {
-                    tbLabel.Text = $"{tree.Name}. Depth = {depth}. Finished";
+                    tbLabel.Text = $"{tree.Name}. Depth = {s_depth}. Finished";
                     Permission();
                     CompositionTarget.Rendering -= StartAnimationTree;
                 }
@@ -642,9 +642,9 @@ namespace FractalGenrator
                 tbLabel.Text = str;
                 cntDepth += 1;
 
-                if (cntDepth > depth)
+                if (cntDepth > s_depth)
                 {
-                    tbLabel.Text = $"{flake.Name} - Depth = {depth}. Finished";
+                    tbLabel.Text = $"{flake.Name} - Depth = {s_depth}. Finished";
                     Permission();
                     CompositionTarget.Rendering -= StartAnimationFlake;
                 }
@@ -739,19 +739,19 @@ namespace FractalGenrator
                 switch (lastFractal.Last.Value)
                 {
                     case 1:
-                        tree.DrawBinaryTree(canvas1, depth, new Point(canvas1.Width / 2, canvas1.Height * 0.77), 0.2 * canvas1.Width, 3 * Math.PI / 2, angleCheck, gradient, gradientCheck, 2, angleL, angleR);
+                        tree.DrawBinaryTree(canvas1, s_depth, new Point(canvas1.Width / 2, canvas1.Height * 0.77), 0.2 * canvas1.Width, 3 * Math.PI / 2, angleCheck, gradient, gradientCheck, 2, s_angleL, s_angleR);
                         break;
                     case 2:
-                        flake.DrawSnowFlake(canvas1, SnowflakeSize, depth, gradient, gradientCheck);
+                        flake.DrawSnowFlake(canvas1, SnowflakeSize, s_depth, gradient, gradientCheck);
                         break;
                     case 3:
-                        line.DrawLine(canvas1, depth, new Point(0, 0), canvas1.Width, lengthBetween, gradient, gradientCheck);
+                        line.DrawLine(canvas1, s_depth, new Point(0, 0), canvas1.Width, lengthBetween, gradient, gradientCheck);
                         break;
                     case 4:
-                        carpet.DrawCarpet(canvas1, depth, pol, 0, gradient, gradientCheck);
+                        carpet.DrawCarpet(canvas1, s_depth, pol, 0, gradient, gradientCheck);
                         break;
                     case 5:
-                        triangle.DrawTriangle(canvas1, depth, pol, 0, gradient, gradientCheck);
+                        triangle.DrawTriangle(canvas1, s_depth, pol, 0, gradient, gradientCheck);
                         break;
                 }
             }
